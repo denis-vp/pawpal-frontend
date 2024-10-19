@@ -1,50 +1,127 @@
-# React + TypeScript + Vite
+# Development Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Please 🥺 read this guide before starting development.
 
-Currently, two official plugins are available:
+## Useful Guides
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React: <https://react.dev/reference/react>
+- Material-UI: <https://mui.com/material-ui/all-components/>
+- Zustand: <https://zustand.docs.pmnd.rs/getting-started/introduction>
+- Axios: <https://axios-http.com/docs/intro>
 
-## Expanding the ESLint configuration
+## Table of Contents
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [Development Guide](#development-guide)
+  - [Useful Guides](#useful-guides)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+    - [Installation](#installation)
+  - [Development Workflow](#development-workflow)
+    - [Branch Naming](#branch-naming)
+    - [Commit Message](#commit-message)
+    - [Pull Request](#pull-request)
+  - [Code Style](#code-style)
 
-- Configure the top-level `parserOptions` property like this:
+## Prerequisites
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+The project requires the following tools to be installed on your system: Node.js, NPM, Git, and an IDE.
+
+## Getting Started
+
+### Installation
+
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/denis-vp/pawpal-frontend.git
+   cd pawpal-frontend
+    ```
+
+2. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory and add the following environment variables:
+
+   ```bash
+    NOTHING_JUST_YET
+    ```
+
+### Running the Application
+
+1. Start the development server
+
+   ```bash
+    npm run dev
+    ```
+  
+2. Open the browser and navigate to <http://localhost:5173/> (port may vary)
+
+## Project Structure
+
+Please 🥺 maintain a project structure similar to the one below:
+
+```md
+└── src/
+    ├── assets/
+    ├── api/
+    ├── configs/
+    ├── components/
+    │   ├── auth/
+    │   │   └── SignUpForm.tsx
+    │   ├── payment/
+    │   │   └── PaymentForm.tsx
+    │   ├── common/
+    │   │   └── Button.tsx
+    │   └── employees/
+    │       ├── EmployeeList.tsx
+    │       └── EmployeeSummary.tsx
+    ├── hooks/
+    │   ├── auth/
+    │   │   └── useAuth.ts
+    │   ├── payment/
+    │   │   └── usePayment.ts
+    │   └── employees/
+    │       ├── useEmployees.ts
+    │       └── useUpdateEmployee.ts
+    ├── lib/
+    ├── services/
+    ├── states/
+    └── utils/
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Development Workflow
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Branch Naming
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Please 🥺 follow the naming convention below when creating branches:
+
+- `feature/feature-name`
+- `bugfix/bug-name`
+- `refactor/refactor-name`
+- `chore/chore-name`
+- `docs/docs-name`
+
+### Commit Message
+
+Please 🥺 make your commit messages imperative, i.e not past tense.  
+Example: `Add health record filtering` instead of `Added health record filtering`.
+
+### Pull Request
+
+Pushing directly to the `main` branch is not allowed.  
+Please pull and merge the latest changes from the `main` branch before creating a pull request.
+
+## Code Style
+
+Please 🥺 follow the code style guide below:
+
+- Use camelCase for variable names.
+- Use PascalCase for component names.
+- Use TypeScript for type-checking.
+- Use Material-UI components for UI elements.
+- Use Zustand for state management.
+- Use Axios for HTTP requests.
