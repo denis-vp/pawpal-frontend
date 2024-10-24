@@ -2,6 +2,10 @@
 
 Please 🥺 read this guide before starting development.
 
+## Backend Repository
+
+<https://github.com/denis-vp/pawpal-backend>
+
 ## Useful Guides
 
 - React: <https://react.dev/reference/react>
