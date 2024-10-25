@@ -1,20 +1,31 @@
-import { useState } from 'react'
-import pawpalLogo from './assets/pawpal.png'
 import './App.css'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import SignUp from './components/auth/SignUp';
+import LogIn from './components/auth/LogIn';
+
+const theme = createTheme({});
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LogIn />,
+  },
+  {
+    path: "/log-in",
+    element: <LogIn />,
+  },
+  {
+    path: "/sign-up",
+    element: <SignUp />,
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <img src={pawpalLogo} className="logo" alt="PawPal Logo" style={{ width: '300px', height: '300px' }} />
-      <h1>PawPal</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          ❤️ is {count}
-        </button>
-      </div>
-    </>
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   )
 }
 
