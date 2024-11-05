@@ -8,7 +8,6 @@ const petsData = [
   { id: 2, name: 'Bella', image: petPicture, gender: 'Female', age: '3 years', breed: 'Labrador', weight: '22 kg' },
   { id: 3, name: 'Bella', image: petPicture, gender: 'Female', age: '3 years', breed: 'Labrador', weight: '22 kg' },
   { id: 4, name: 'Bella', image: petPicture, gender: 'Female', age: '3 years', breed: 'Labrador', weight: '22 kg' },
-  // Add more pets here as needed
 ];
 
 function App() {

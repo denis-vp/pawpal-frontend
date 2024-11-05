@@ -55,7 +55,7 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
         <Box display="flex" justifyContent="space-between" alignItems="center" borderBottom={2} sx={{ pt: 4 }}>
           <Typography variant="h2" sx={{ fontWeight: 'bold' }}>{title}</Typography>
           <IconButton onClick={handleAddClick}>
-            <AddIcon fontSize="large"/>
+            <AddIcon fontSize="large" />
           </IconButton>
         </Box>
 
