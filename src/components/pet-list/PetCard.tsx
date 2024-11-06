@@ -29,8 +29,8 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
         transition: 'transform 0.3s',
         '&:hover': { transform: 'scale(1.05)' },
         backgroundColor: 'secondary.light',
-        ml: 5,
-        mr: 5,
+        ml: 15,
+        mr: 15,
         height: 110,
         borderRadius: '50px'
       }}

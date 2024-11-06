@@ -1,13 +1,14 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Grid, ThemeProvider, CssBaseline, Typography, IconButton } from '@mui/material';
+import { Box, Grid, ThemeProvider, CssBaseline, Typography, Button } from '@mui/material';
 import ProfileDetails from './ProfileDetails';
 import MedicalLog from './MedicalLogCard';
 import VaccineLog from './VaccineLogCard';
 import DocumentCard from './DocumentCard';
-import AddIcon from '@mui/icons-material/Add';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import theme from '../../theme';
 import { Pet } from '../../models/Pet';
+import { styled } from '@mui/material/styles';
 
 interface PetProfileProps {
   petsData: Pet[];
@@ -25,11 +26,21 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
   ];
 
   const vaccinationLogs = [
-    { id: 0, type: 'Rabies Vaccination', date: '2022/05/15', renewDate: '2023/11/15'},
-    { id: 1, type: 'DHPPL Booster', date: '2022/05/15', renewDate: '2025/03/03'},
-    { id: 2, type: 'Rabies Vaccination', date: '2023/11/15', renewDate: '2024/05/15'},
+    { id: 0, type: 'Rabies Vaccination', date: '2022/05/15', renewDate: '2023/11/15' },
+    { id: 1, type: 'DHPPL Booster', date: '2022/05/15', renewDate: '2025/03/03' },
+    { id: 2, type: 'Rabies Vaccination', date: '2023/11/15', renewDate: '2024/05/15' },
   ];
-
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -45,12 +56,23 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
 
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="space-between" borderBottom={2} marginBottom={2} alignItems="center">
-                  <Typography variant="h2" sx={{ fontWeight: 'bold', pt: 4, marginBottom: 2}}>
+                  <Typography variant="h2" sx={{ fontWeight: 'bold', pt: 4, marginBottom: 2 }}>
                     Documents
                   </Typography>
-                  <IconButton>
-                    <AddIcon fontSize="large" />
-                  </IconButton>
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload documents
+                    <VisuallyHiddenInput
+                      type="file"
+                      onChange={(event) => console.log(event.target.files)}
+                      multiple
+                    />
+                  </Button>
                 </Box>
               </Grid>
 

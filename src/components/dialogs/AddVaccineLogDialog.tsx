@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from '@mui/material';
 
 interface AddVaccineLogDialogProps {
   open: boolean;
@@ -24,7 +24,7 @@ const AddVaccineLogDialog: React.FC<AddVaccineLogDialogProps> = ({ open, onClose
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Vaccine Log</DialogTitle>
+      <DialogTitle><Typography variant="body1">Add Vaccine Log</Typography></DialogTitle>
       <DialogContent>
       <TextField
           margin="dense"
