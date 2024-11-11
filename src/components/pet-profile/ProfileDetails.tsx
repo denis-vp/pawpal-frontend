@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, Typography, Box, Button, ThemeProvider } from '@mui/material';
 import { Pet } from '../../models/Pet';
 import theme from '../../theme';
+import EditPetDialog from '../dialogs/EditPetDialog';
 
 interface ProfileDetailsProps {
   petDetails: Pet;
 }
 
 const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
+  const [editPetDialogOpen, setEditPetDialogOpen] = useState(false);
+
+  const handleEditClick = () => {
+    setEditPetDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setEditPetDialogOpen(false);
+  };
+
+  const handleUpdatePet = (updatedPet: Pet) => {
+    // Implement logic for pet update
+    console.log('Updated pet details:', updatedPet);
+    setEditPetDialogOpen(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container spacing={4} alignItems="center">
@@ -106,17 +123,26 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
             </Typography>
           </Box>
 
-          {/* Button */}
+          {/* Edit Button */}
           <Box textAlign="left">
             <Button 
               size="large"
               variant="contained"
               disableElevation
+              onClick={handleEditClick}
             >
               Edit Profile
             </Button>
           </Box>
         </Grid>
+
+        {/* EditPetDialog Component */}
+        <EditPetDialog
+          open={editPetDialogOpen}
+          onClose={handleDialogClose}
+          pet={petDetails}  // Pass the pet details here
+          onUpdatePet={handleUpdatePet}  // Handle the pet update
+        />
       </Grid>
     </ThemeProvider>
   );

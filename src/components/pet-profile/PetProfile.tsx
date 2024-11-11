@@ -18,6 +18,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
   const { id } = useParams<{ id: string }>();
   const petDetails = petsData.find((pet) => pet.id === Number(id));
 
+
   if (!petDetails) return <Typography variant="h6">Pet not found</Typography>;
 
   const medicalLogs = [
