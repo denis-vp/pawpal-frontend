@@ -1,21 +1,32 @@
-import { useState } from 'react'
-import pawpalLogo from './assets/pawpal.png'
-import './App.css'
+import Header from "./components/Header";
+import PetProfile from "./components/pet-profile/PetProfile";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import petPicture from '../src/assets/pet-picture.jpg'
+import PetsList from "./components/pet-list/PetsList";
+import AddPetDialog from "./components/dialogs/AddPetDialog";
+import EditPetDialog from './components/dialogs/EditPetDialog';
+
+
+const petsData = [
+  { id: 1, name: 'Buddy', image: petPicture, gender: 'Male', age: '2 years', breed: 'Golden Retriever', weight: '25 kg' },
+  { id: 2, name: 'Bella', image: petPicture, gender: 'Female', age: '3 years', breed: 'Labrador', weight: '22 kg' },
+  { id: 3, name: 'Bella', image: petPicture, gender: 'Female', age: '3 years', breed: 'Labrador', weight: '22 kg' },
+  { id: 4, name: 'Bella', image: petPicture, gender: 'Female', age: '3 years', breed: 'Labrador', weight: '22 kg' },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <img src={pawpalLogo} className="logo" alt="PawPal Logo" style={{ width: '300px', height: '300px' }} />
-      <h1>PawPal</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          ❤️ is {count}
-        </button>
-      </div>
-    </>
-  )
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<PetsList pets={petsData} />} />
+        <Route path="/:id" element={<PetProfile petsData={petsData} />} />
+        <Route path="/pets" element={<PetsList pets={petsData} />} />
+        <Route path="/add-pet" element={<AddPetDialog open={true} onClose={() => {}} onAddPet={() => {}} />} />
+        <Route path="/edit-preview" element={<EditPetDialog open={true} onClose={() => {}} pet={petsData[0]} onUpdatePet={() => {}}/>} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
