@@ -17,12 +17,12 @@ const theme = createTheme({
 
   typography: {
     fontFamily: ["Inter", "Noto Sans", "sans-serif"].join(","),
-    h1: { fontWeight: 700, fontSize: "3rem", fontFamily: 'cursive' },
-    h2: { fontWeight: 700, fontSize: "1.75rem" },
-    h3: { fontWeight: 700, fontSize: "1.5rem", fontFamily: 'cursive' },
-    body1: { fontWeight: 700, fontSize: "2rem", fontFamily: 'cursive' },
-    body2: { fontWeight: 700, fontSize: "1.125rem" },
-    button: { fontWeight: 700, textTransform: "none" },
+    h1: { fontWeight: 500, fontSize: "2.5rem" },
+    h2: { fontWeight: 500, fontSize: "2rem" },
+    h3: { fontWeight: 500, fontSize: "1.75rem" },
+    body1: { fontWeight: 400, fontSize: "1rem" },
+    body2: { fontWeight: 400, fontSize: "0.875rem" },
+    button: { fontWeight: 500, textTransform: "none" },
   },
 
   shape: { borderRadius: 8 },

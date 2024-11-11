@@ -8,6 +8,8 @@ import { ThemeProvider } from "@emotion/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import theme from "./theme";
 import { CssBaseline } from "@mui/material";
+import LogIn from "./components/auth/LogIn";
+import SignUp from "./components/auth/SignUp";
 
 const petsData = [
   {
@@ -49,22 +51,17 @@ const petsData = [
 ];
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/log-in",
-  //   element: <LogIn />,
-  // },
-  // {
-  //   path: "/sign-up",
-  //   element: <SignUp />,
-  // },
   {
     path: "/",
-    element: (
-      <>
-        <Header />
-        <PetsList pets={petsData} />
-      </>
-    ),
+    element: <LogIn />,
+  },
+  {
+    path: "/log-in",
+    element: <LogIn />,
+  },
+  {
+    path: "/sign-up",
+    element: <SignUp />,
   },
   {
     path: "/:id",
