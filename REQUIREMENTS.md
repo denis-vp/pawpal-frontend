@@ -37,20 +37,15 @@
 1. **Symptom Checker**
    - A simple tool where users can input symptoms (e.g., lethargy, vomiting) and get basic advice on whether they should consult a vet. It could be linked to reputable pet health sources.
 
-2. **Integration with Vet Systems**
-   - **Vet Collaboration**: Integration with veterinary systems so that vets can directly upload records or communicate with pet owners through the app.
-   - **Telemedicine**: Allow pet owners to schedule virtual consultations with vets.
-
-3. **Diet and Nutrition Tracking**
+2. **Diet and Nutrition Tracking**
    - **Diet Log**: Track food intake, dietary changes, and recommended feeding schedules.
    - **Custom Diet Plans**: Tailored recommendations for pet diets based on breed, age, and health conditions.
 
-4. **Exercise Recommendations**
+3. **Exercise Recommendations**
    - Provide exercise suggestions based on the pet's breed, age, and health conditions (e.g., daily steps for dogs, playtime ideas for cats).
 
-5. **Social and Sharing Features**
+4. **Social and Sharing Features**
    - **Pet Owner Community**: Allow users to connect with other pet owners for advice, playdates, or recommendations for vets and groomers.
-   - **Share with Family**: Let users share pet profiles with family members so they can also get notifications and updates.
 
 ---
 
