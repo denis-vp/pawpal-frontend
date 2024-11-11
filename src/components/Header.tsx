@@ -18,7 +18,7 @@ const Header = () => {
           left: 0,
           width: "100%",
           zIndex: 1000,
-          backgroundColor: 'secondary.main',
+          backgroundColor: 'primary.light',
           borderBottom: "2px solid black",
           minHeight: '100px',
           

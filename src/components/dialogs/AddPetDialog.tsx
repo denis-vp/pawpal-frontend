@@ -33,7 +33,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({open, onClose, onAddPet}) =>
     <ThemeProvider theme={theme}>
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>
-          <Typography variant="body1">AddPet</Typography>
+          <Typography variant="body1">Add Pet</Typography>
         </DialogTitle>
         <DialogContent>
           <TextField
