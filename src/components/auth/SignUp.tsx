@@ -6,15 +6,41 @@ import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useApiStore } from "../../state/apiStore";
 
 const LOG_IN = "/log-in";
 
 function SignUp() {
   const navigate = useNavigate();
 
+  const { register } = useApiStore();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+
+  const handleSubmit = async (
+    firstName: string,
+    lastName: string,
+    email: string
+  ) => {
+    register(firstName, lastName, email)
+      .then((response) => {
+        if (response.status === 200) {
+          // Handle successful login
+        } else {
+          // Handle error
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          // Handle network error
+          return;
+        }
+
+        // Handle error
+      });
+  };
 
   return (
     <Paper
@@ -35,6 +61,14 @@ function SignUp() {
           padding: 2,
           width: 400,
         }}
+        component="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (firstName && lastName && email) {
+            handleSubmit(firstName, lastName, email);
+          }
+        }}
+        noValidate
       >
         <Typography variant="h5" align="left">
           Create your PawPal Account

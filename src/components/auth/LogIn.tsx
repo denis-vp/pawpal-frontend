@@ -8,14 +8,36 @@ import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useApiStore } from "../../state/apiStore";
 
 const SIGN_UP = "/sign-up";
 
 function LogIn() {
   const navigate = useNavigate();
 
+  const { login } = useApiStore();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSubmit = async (email: string, password: string) => {
+    login(email, password)
+      .then((response) => {
+        if (response.status === 200) {
+          // Handle successful login
+        } else {
+          // Handle error
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          // Handle network error
+          return;
+        }
+
+        // Handle error
+      });
+  };
 
   return (
     <Paper
@@ -36,6 +58,14 @@ function LogIn() {
           padding: 2,
           width: 400,
         }}
+        component="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (email && password) {
+            handleSubmit(email, password);
+          }
+        }}
+        noValidate
       >
         <Typography variant="h5" align="left">
           Log In to PawPal
