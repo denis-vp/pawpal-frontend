@@ -1,6 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography, ThemeProvider} from '@mui/material';
-import theme from '../../theme'
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 interface EditPetDialogProps {
   open: boolean;
@@ -19,13 +26,18 @@ export interface Pet {
   weight: string;
 }
 
-const EditPetDialog: React.FC<EditPetDialogProps>=({open, onClose, pet, onUpdatePet}) => {
-  const [name, setName] = useState('')
-  const [gender, setGender] = useState('');
-  const [age, setAge] = useState('');
-  const [breed, setBreed] = useState('');
-  const [weight, setWeight] = useState('');
-  const [image, setImage] = useState('');
+const EditPetDialog: React.FC<EditPetDialogProps> = ({
+  open,
+  onClose,
+  pet,
+  onUpdatePet,
+}) => {
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [breed, setBreed] = useState("");
+  const [weight, setWeight] = useState("");
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     if (pet) {
@@ -56,84 +68,90 @@ const EditPetDialog: React.FC<EditPetDialogProps>=({open, onClose, pet, onUpdate
   if (!pet) return null;
 
   return (
-    <ThemeProvider theme={theme}>
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle><Typography variant="body1">Edit Pet</Typography></DialogTitle>
-        <DialogContent>
-          <TextField 
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            value={name}
-            onChange={ (e) => setName(e.target.value)}
-            InputLabelProps={{shrink: true, sx: {typography: 'body2' } }}
-            InputProps={{ sx: { typography: 'body2' } }}
-          />
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>
+        <Typography variant="body1">Edit Pet</Typography>
+      </DialogTitle>
+      <DialogContent>
+        <TextField
+          margin="dense"
+          label="Name"
+          type="text"
+          fullWidth
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
+        />
 
-          <TextField 
-            margin="dense"
-            label="Image URL"
-            type="text"
-            fullWidth
-            value={image}
-            onChange={ (e) => setImage(e.target.value)}
-            InputLabelProps={{shrink: true, sx: {typography: 'body2' } }}
-            InputProps={{ sx: { typography: 'body2' } }}
-          />
+        <TextField
+          margin="dense"
+          label="Image URL"
+          type="text"
+          fullWidth
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
+        />
 
-          <TextField 
-            margin="dense"
-            label="Gender"
-            type="text"
-            fullWidth
-            value={gender}
-            onChange={ (e) => setGender(e.target.value)}
-            InputLabelProps={{shrink: true, sx: {typography: 'body2' } }}
-            InputProps={{ sx: { typography: 'body2' } }}
-          />
+        <TextField
+          margin="dense"
+          label="Gender"
+          type="text"
+          fullWidth
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
+        />
 
-          <TextField 
-            margin="dense"
-            label="Age"
-            type="text"
-            fullWidth
-            value={age}
-            onChange={ (e) => setAge(e.target.value)}
-            InputLabelProps={{shrink: true, sx: {typography: 'body2' } }}
-            InputProps={{ sx: { typography: 'body2' } }}
-          />
+        <TextField
+          margin="dense"
+          label="Age"
+          type="text"
+          fullWidth
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
+        />
 
-          <TextField 
-            margin="dense"
-            label="Breed"
-            type="text"
-            fullWidth
-            value={breed}
-            onChange={ (e) => setBreed(e.target.value)}
-            InputLabelProps={{shrink: true, sx: {typography: 'body2' } }}
-            InputProps={{ sx: { typography: 'body2' } }}
-          />
+        <TextField
+          margin="dense"
+          label="Breed"
+          type="text"
+          fullWidth
+          value={breed}
+          onChange={(e) => setBreed(e.target.value)}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
+        />
 
-          <TextField 
-            margin="dense"
-            label="Weight"
-            type="text"
-            fullWidth
-            value={weight}
-            onChange={ (e) => setWeight(e.target.value)}
-            InputLabelProps={{shrink: true, sx: {typography: 'body2' } }}
-            InputProps={{ sx: { typography: 'body2' } }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} sx={{ typography: 'body2'}}>Cancel</Button>
-          <Button onClick={handleUpdateClick} color="primary" sx={{ typography: 'body2' }}>
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </ThemeProvider>
+        <TextField
+          margin="dense"
+          label="Weight"
+          type="text"
+          fullWidth
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} sx={{ typography: "body2" }}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleUpdateClick}
+          color="primary"
+          sx={{ typography: "body2" }}
+        >
+          Update
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

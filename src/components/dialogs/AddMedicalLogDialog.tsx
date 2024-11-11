@@ -1,6 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography, ThemeProvider } from '@mui/material';
-import theme from '../../theme';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from '@mui/material';
 
 interface AddMedicalLogDialogProps {
   open: boolean;
@@ -28,7 +27,6 @@ const AddMedicalLogDialog: React.FC<AddMedicalLogDialogProps> = ({ open, onClose
   };
 
   return (
-    <ThemeProvider theme={theme}>
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>
           <Typography variant="body1">Add Medical Log</Typography>
@@ -97,7 +95,6 @@ const AddMedicalLogDialog: React.FC<AddMedicalLogDialogProps> = ({ open, onClose
           </Button>
         </DialogActions>
       </Dialog>
-    </ThemeProvider>
   );
 };
 

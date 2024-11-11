@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, ThemeProvider, Typography } from '@mui/material';
-import theme from '../../theme';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 interface EditVaccineLogDialogProps {
   open: boolean;
@@ -16,10 +23,15 @@ export interface VaccineLog {
   renewDate: string;
 }
 
-const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({ open, onClose, log, onUpdateLog }) => {
-  const [type, setType] = useState('');
-  const [date, setDate] = useState('');
-  const [renewDate, setRenewDate] = useState('');
+const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({
+  open,
+  onClose,
+  log,
+  onUpdateLog,
+}) => {
+  const [type, setType] = useState("");
+  const [date, setDate] = useState("");
+  const [renewDate, setRenewDate] = useState("");
 
   useEffect(() => {
     if (log) {
@@ -44,9 +56,10 @@ const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({ open, onClo
   if (!log) return null;
 
   return (
-    <ThemeProvider theme={theme}>
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle><Typography variant="body1">Edit Vaccine Log</Typography></DialogTitle>
+      <DialogTitle>
+        <Typography variant="body1">Edit Vaccine Log</Typography>
+      </DialogTitle>
       <DialogContent>
         <TextField
           margin="dense"
@@ -55,8 +68,8 @@ const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({ open, onClo
           fullWidth
           value={type}
           onChange={(e) => setType(e.target.value)}
-          InputLabelProps={{ shrink: true, sx: { typography: 'body2' } }}
-          InputProps={{ sx: { typography: 'body2' } }}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
         />
         <TextField
           margin="dense"
@@ -65,8 +78,8 @@ const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({ open, onClo
           fullWidth
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          InputLabelProps={{ shrink: true, sx: { typography: 'body2' } }}
-          InputProps={{ sx: { typography: 'body2' } }}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
         />
         <TextField
           margin="dense"
@@ -75,8 +88,8 @@ const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({ open, onClo
           fullWidth
           value={renewDate}
           onChange={(e) => setRenewDate(e.target.value)}
-          InputLabelProps={{ shrink: true, sx: { typography: 'body2' } }}
-          InputProps={{ sx: { typography: 'body2' } }}
+          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
+          InputProps={{ sx: { typography: "body2" } }}
         />
       </DialogContent>
       <DialogActions>
@@ -86,7 +99,6 @@ const EditVaccineLogDialog: React.FC<EditVaccineLogDialogProps> = ({ open, onClo
         </Button>
       </DialogActions>
     </Dialog>
-    </ThemeProvider>
   );
 };
 
