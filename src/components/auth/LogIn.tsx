@@ -1,4 +1,4 @@
-import { Box, Link } from "@mui/material";
+import { Alert, Box, Link, Snackbar } from "@mui/material";
 import Button from "@mui/material/Button/Button";
 import Checkbox from "@mui/material/Checkbox/Checkbox";
 import Container from "@mui/material/Container/Container";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useApiStore } from "../../state/apiStore";
 import theme from "../../theme";
 
-const SIGN_UP = "/sign-up";
+const SIGN_UP = "/signup";
 
 function LogIn() {
   const navigate = useNavigate();
@@ -20,23 +20,37 @@ function LogIn() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = async (email: string, password: string) => {
     login(email, password)
       .then((response) => {
         if (response.status === 200) {
-          // Handle successful login
+          const data = response.data;
+          localStorage.setItem("jwtToken", data.jwt);
+          localStorage.setItem("userFirstName", data.firstName);
+          localStorage.setItem("userLastName", data.lastName);
+        
+          navigate("/");
         } else {
-          // Handle error
+          setError("Login failed. Please try again.");
+          setSnackbarOpen(true);
         }
       })
       .catch((error) => {
         if (!error.response) {
-          // Handle network error
+          setError("Network error. Please try again later.");
+          setSnackbarOpen(true);
           return;
         }
 
-        // Handle error
+        if (error.response.status === 401) {
+          setError("Invalid email or password.");
+        } else {
+          setError("Login failed. Please try again.");
+        }
+        setSnackbarOpen(true);
       });
   };
 
@@ -129,6 +143,23 @@ function LogIn() {
           style={{ borderRadius: "16px" }}
         />
       </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => {
+          setSnackbarOpen(false);
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setSnackbarOpen(false);
+          }}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
