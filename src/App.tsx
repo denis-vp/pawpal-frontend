@@ -53,14 +53,19 @@ const petsData = [
 const router = createBrowserRouter([
   {
     path: "/",
+    element: (
+      <>
+        <Header />
+        <PetsList pets={petsData} />
+      </>
+    ),
+  },
+  {
+    path: "/login",
     element: <LogIn />,
   },
   {
-    path: "/log-in",
-    element: <LogIn />,
-  },
-  {
-    path: "/sign-up",
+    path: "/signup",
     element: <SignUp />,
   },
   {
