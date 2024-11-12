@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useApiStore } from "../../state/apiStore";
 
 interface EditPetDialogProps {
   open: boolean;
@@ -32,12 +34,14 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
   pet,
   onUpdatePet,
 }) => {
+  const { updatePet } = useApiStore();
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [breed, setBreed] = useState("");
   const [weight, setWeight] = useState("");
   const [image, setImage] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (pet) {
@@ -50,18 +54,17 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
     }
   }, [pet]);
 
-  const handleUpdateClick = () => {
+  const handleUpdateClick = async () => {
+    setError(null);
+
     if (pet) {
-      onUpdatePet({
-        id: pet.id,
-        name,
-        image,
-        gender,
-        age,
-        breed,
-        weight,
-      });
-      onClose();
+      try {
+        const response = await updatePet(pet.id, { name, gender, age, breed, weight, image });
+        onUpdatePet(response.data);
+        onClose();
+      } catch (err) {
+        setError("Failed to update pet. Please try again.");
+      }
     }
   };
 
@@ -73,6 +76,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
         <Typography variant="body1">Edit Pet</Typography>
       </DialogTitle>
       <DialogContent>
+      {error && <Typography color="error">{error}</Typography>}
         <TextField
           margin="dense"
           label="Name"

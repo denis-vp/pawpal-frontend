@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import {
   Dialog,
   DialogTitle,
@@ -8,19 +9,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import {useApiStore} from "../../state/apiStore";
+import { Pet } from "../../models/Pet";
 
 interface AddPetDialogProps {
   open: boolean;
   onClose: () => void;
-  onAddPet: (
-    id: number,
-    name: string,
-    gender: string,
-    age: string,
-    breed: string,
-    weight: string,
-    image: string
-  ) => void;
+  onAddPet: (pet: Pet) => void;
 }
 
 const AddPetDialog: React.FC<AddPetDialogProps> = ({
@@ -28,24 +23,24 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   onClose,
   onAddPet,
 }) => {
-  const [id, setId] = React.useState(0);
+  const { addPet } = useApiStore();
   const [name, setName] = React.useState("");
   const [gender, setGender] = React.useState("");
   const [age, setAge] = React.useState("");
   const [breed, setBreed] = React.useState("");
   const [weight, setWeight] = React.useState("");
   const [image, setImage] = React.useState("");
+  const [error, setError] = React.useState<string | null>(null);
 
-  const handleAddClick = () => {
-    onAddPet(id, name, gender, age, breed, weight, image);
-    setId(0);
-    setName("");
-    setGender("");
-    setAge("");
-    setBreed("");
-    setWeight("");
-    setImage("");
-    onClose();
+  const handleAddClick = async() => {
+    setError(null);
+    try {
+      const response = await addPet({ name, gender, age, breed, weight, image });
+      onAddPet(response.data);
+      onClose();
+    } catch (err) {
+      setError("Failed to add pet. Please try again.");
+    }
   };
 
   return (
@@ -54,6 +49,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
         <Typography variant="body1">Add Pet</Typography>
       </DialogTitle>
       <DialogContent>
+        {error && <Typography color="error">{error}</Typography>}
         <TextField
           margin="dense"
           label="Name"
