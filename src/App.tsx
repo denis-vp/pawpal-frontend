@@ -10,6 +10,7 @@ import theme from "./theme";
 import { CssBaseline } from "@mui/material";
 import LogIn from "./components/auth/LogIn";
 import SignUp from "./components/auth/SignUp";
+import AppointmentForm from "./components/vet-appointments/AppointmentForm";
 
 const petsData = [
   {
@@ -53,7 +54,11 @@ const petsData = [
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LogIn />,
+    element: <LogIn/>,
+  },
+  {
+    path: "/appointments",
+    element: <AppointmentForm pets={petsData} />
   },
   {
     path: "/log-in",
