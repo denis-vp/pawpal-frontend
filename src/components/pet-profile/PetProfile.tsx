@@ -1,31 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Box,
-  Grid,
-  ThemeProvider,
-  CssBaseline,
-  Typography,
-  Button,
-} from "@mui/material";
-import ProfileDetails from "./ProfileDetails";
-import MedicalLog from "./MedicalLogCard";
-import VaccineLog from "./VaccineLogCard";
-import DocumentCard from "./DocumentCard";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import theme from "../../theme";
+import { Box, Typography, CircularProgress, styled, Button, CssBaseline, Grid, ThemeProvider } from "@mui/material";
 import { Pet } from "../../models/Pet";
-import { styled } from "@mui/material/styles";
+import ProfileDetails from "./ProfileDetails";
+import { useApiStore } from "../../state/apiStore";
+import theme from "../../theme";
+import DocumentCard from "./DocumentCard";
+import MedicalLogCard from "./MedicalLogCard";
+import VaccineLogCard from "./VaccineLogCard";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-interface PetProfileProps {
-  petsData: Pet[];
-}
-
-const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
+const PetProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const petDetails = petsData.find((pet) => pet.id === Number(id));
+  const [petDetails, setPetDetails] = useState<Pet | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  if (!petDetails) return <Typography variant="h6">Pet not found</Typography>;
+  const { getPetById } = useApiStore();
 
   const medicalLogs = [
     {
@@ -66,6 +57,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
       renewDate: "2024/05/15",
     },
   ];
+
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -77,7 +69,50 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
     whiteSpace: "nowrap",
     width: 1,
   });
-  return (
+
+  useEffect(() => {
+    const fetchPet = async () => {
+      try {
+        if (id) {
+          const response = await getPetById(id);
+          switch (response.status) {
+            case 200:
+              setPetDetails(response.data);
+              setErrorMessage(null);
+              break;
+            case 400:
+              setErrorMessage("Invalid pet ID provided. Please try again.");
+              break;
+            case 404:
+              setErrorMessage("Pet with the specified ID not found.");
+              break;
+            case 500:
+              setErrorMessage("Server encountered an error. Please try again later.");
+              break;
+            default:
+              setErrorMessage("An unexpected error occurred. Please try again.");
+          }
+        }
+      } catch (error) {
+        setErrorMessage("Network error or server is unreachable.");
+        console.error("Error fetching pet:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPet();
+  }, [id, getPetById]);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (errorMessage) {
+    return <Typography variant="h6" color="error">{errorMessage}</Typography>;
+  }
+
+  return petDetails ? (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
@@ -103,9 +138,9 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
             <Grid container spacing={4}>
               <ProfileDetails petDetails={petDetails} />
 
-              <MedicalLog title="Medical Log" logs={medicalLogs} />
+              <MedicalLogCard title="Medical Log" logs={medicalLogs} />
 
-              <VaccineLog title="Vaccination Log" logs={vaccinationLogs} />
+              <VaccineLogCard title="Vaccination Log" logs={vaccinationLogs} />
 
               <Grid item xs={12}>
                 <Box
@@ -148,6 +183,8 @@ const PetProfile: React.FC<PetProfileProps> = ({ petsData }) => {
         </Box>
       </Box>
     </ThemeProvider>
+  ) : (
+    <Typography variant="h6">Pet not found</Typography>
   );
 };
 

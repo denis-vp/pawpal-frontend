@@ -12,6 +12,8 @@ type ApiStore = {
     email: string
   ) => Promise<AxiosResponse>;
   login: (email: string, password: string) => Promise<AxiosResponse>;
+  getAllPetsByUserId: () => Promise<AxiosResponse>;
+  getPetById: (petId: string) => Promise<AxiosResponse>;
 };
 
 export const useApiStore = create<ApiStore>((set, get) => {
@@ -56,6 +58,22 @@ export const useApiStore = create<ApiStore>((set, get) => {
         email,
         password,
       });
+    },
+    getAllPetsByUserId: async () => {
+      try {
+        const response = await axiosInstance.get("/pets/all");
+        return response;
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+    getPetById: async (petId: string) => {
+      try {
+        const response = await axiosInstance.get(`/pets/${petId}`);
+        return response;
+      } catch (error) {
+        return Promise.reject(error);
+      }
     },
   };
 });

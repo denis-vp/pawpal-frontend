@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetsList pets={petsData} />
+        <PetsList />
       </>
     ),
   },
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetProfile petsData={petsData} />
+        <PetProfile />
       </>
     ),
   },
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetsList pets={petsData} />
+        <PetsList />
       </>
     ),
   },
