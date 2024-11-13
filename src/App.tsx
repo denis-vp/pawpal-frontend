@@ -58,14 +58,14 @@ const router = createBrowserRouter([
   },
   {
     path: "/appointments",
-    element: <AppointmentForm pets={petsData} />
+    element: <AppointmentForm pets={petsData} />,
   },
   {
-    path: "/log-in",
+    path: "/login",
     element: <LogIn />,
   },
   {
-    path: "/sign-up",
+    path: "/signup",
     element: <SignUp />,
   },
   {
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetProfile petsData={petsData} />
+        <PetProfile />
       </>
     ),
   },
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetsList pets={petsData} />
+        <PetsList />
       </>
     ),
   },
