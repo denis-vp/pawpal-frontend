@@ -16,6 +16,7 @@ Please 🥺 read this guide before starting development.
 ## Table of Contents
 
 - [Development Guide](#development-guide)
+  - [Backend Repository](#backend-repository)
   - [Useful Guides](#useful-guides)
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
@@ -51,7 +52,8 @@ The project requires the following tools to be installed on your system: Node.js
 3. Create a `.env` file in the root directory and add the following environment variables:
 
    ```bash
-    NOTHING_JUST_YET
+    SERVER_URL=your_server_url
+    (most propably http://localhost:8080)
     ```
 
 ### Running the Application
