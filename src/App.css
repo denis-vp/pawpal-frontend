@@ -5,6 +5,13 @@
   text-align: center;
 }
 
+/* .appointment_form_submit_button{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 140px;
+} */
+
 .logo {
   height: 6em;
   padding: 1.5em;
