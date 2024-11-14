@@ -79,14 +79,14 @@ export const useApiStore = create<ApiStore>((set, get) => {
       try {
         return await axiosInstance.post("/add", petData);
       } catch (error) {
-        throw new Error(handleApiError(error));
+        return Promise.reject(error);
       }
     },
     updatePet: async (id, petData) => {
       try {
         return await axiosInstance.post(`/${id}`, petData);
       } catch (error) {
-        throw new Error(handleApiError(error));
+        return Promise.reject(error);
       }
     },
     getAllPetsByUserId: async () => {
