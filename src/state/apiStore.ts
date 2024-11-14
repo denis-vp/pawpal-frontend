@@ -12,6 +12,22 @@ type ApiStore = {
     email: string
   ) => Promise<AxiosResponse>;
   login: (email: string, password: string) => Promise<AxiosResponse>;
+  addPet: (petData: {
+    name: string;
+    gender: string;
+    age: string;
+    breed: string;
+    weight: string;
+    image: string;
+  }) => Promise<AxiosResponse>
+  updatePet: (id: number, petData: {
+    name: string;
+    gender: string;
+    age: string;
+    breed: string;
+    weight: string;
+    image: string;
+  }) => Promise<AxiosResponse>;
   getAllPetsByUserId: () => Promise<AxiosResponse>;
   getPetById: (petId: string) => Promise<AxiosResponse>;
 };
@@ -58,6 +74,20 @@ export const useApiStore = create<ApiStore>((set, get) => {
         email,
         password,
       });
+    },
+    addPet: async (petData) => {
+      try {
+        return await axiosInstance.post("/add", petData);
+      } catch (error) {
+        throw new Error(handleApiError(error));
+      }
+    },
+    updatePet: async (id, petData) => {
+      try {
+        return await axiosInstance.post(`/${id}`, petData);
+      } catch (error) {
+        throw new Error(handleApiError(error));
+      }
     },
     getAllPetsByUserId: async () => {
       try {
