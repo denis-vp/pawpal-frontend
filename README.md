@@ -52,7 +52,7 @@ The project requires the following tools to be installed on your system: Node.js
 3. Create a `.env` file in the root directory and add the following environment variables:
 
    ```bash
-    SERVER_URL=your_server_url
+    VITE_SERVER_URL=your_server_url
     (most propably http://localhost:8080)
     ```
 
