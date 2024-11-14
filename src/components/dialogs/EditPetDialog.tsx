@@ -54,19 +54,45 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
     }
   }, [pet]);
 
-  const handleUpdateClick = async () => {
+  const handleUpdateClick = () => {
     setError(null);
-
+  
     if (pet) {
-      try {
-        const response = await updatePet(pet.id, { name, gender, age, breed, weight, image });
-        onUpdatePet(response.data);
-        onClose();
-      } catch (err) {
-        setError("Failed to update pet. Please try again.");
-      }
+      updatePet(pet.id, { name, gender, age, breed, weight, image })
+        .then((response) => {
+          if (response.status === 200) {
+            onUpdatePet(response.data);
+            onClose();
+          } else {
+            setError("Unexpected response status. Please try again.");
+          }
+        })
+        .catch((error) => {
+          if (!error.response) {
+            setError("Network error. Please check your connection.");
+            return;
+          }
+  
+          switch (error.response.status) {
+            case 400:
+              setError("Bad request. Please check the pet details.");
+              break;
+            case 401:
+              setError("Unauthorized access. Please log in.");
+              break;
+            case 404:
+              setError("Pet not found. It may have been deleted.");
+              break;
+            case 500:
+              setError("Server error. Please try again later.");
+              break;
+            default:
+              setError("Failed to update pet. Please try again.");
+          }
+        });
     }
   };
+  
 
   if (!pet) return null;
 

@@ -32,16 +32,39 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   const [image, setImage] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
 
-  const handleAddClick = async() => {
+  const handleAddClick = () => {
     setError(null);
-    try {
-      const response = await addPet({ name, gender, age, breed, weight, image });
-      onAddPet(response.data);
-      onClose();
-    } catch (err) {
-      setError("Failed to add pet. Please try again.");
-    }
+    addPet({ name, gender, age, breed, weight, image })
+      .then((response) => {
+        if (response.status === 200) {
+          onAddPet(response.data);
+          onClose();
+        } else {
+          setError("Unexpected response status. Please try again.");
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          setError("Network error. Please check your connection.");
+          return;
+        }
+        
+        switch (error.response.status) {
+          case 400:
+            setError("Bad request. Please check the pet details.");
+            break;
+          case 401:
+            setError("Unauthorized access. Please log in.");
+            break;
+          case 500:
+            setError("Server error. Please try again later.");
+            break;
+          default:
+            setError("Failed to add pet. Please try again.");
+        }
+      });
   };
+  
 
   return (
     <Dialog open={open} onClose={onClose}>
