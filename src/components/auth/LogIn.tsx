@@ -28,11 +28,11 @@ function LogIn() {
       .then((response) => {
         if (response.status === 200) {
           const data = response.data;
-          localStorage.setItem("jwtToken", data.jwt);
+          localStorage.setItem("jwtToken", data.token);
           localStorage.setItem("userFirstName", data.firstName);
           localStorage.setItem("userLastName", data.lastName);
         
-          navigate("/");
+          navigate("/pets");
         } else {
           setError("Login failed. Please try again.");
           setSnackbarOpen(true);

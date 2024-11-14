@@ -10,7 +10,7 @@ const PetsList: React.FC = () => {
   const [addPetDialogOpen, setAddPetDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { getAllPetsByUserId } = useApiStore();
+  const { getAllPetsByUserId, getPetById } = useApiStore();
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -56,16 +56,17 @@ const PetsList: React.FC = () => {
   const handleCloseDialog = () => setAddPetDialogOpen(false);
 
   const handleAddPet = (
-    id: number,
-    name: string,
-    gender: string,
-    age: string,
-    breed: string,
-    weight: string,
-    image: string
+    petId: number
   ) => {
-    const newPet: Pet = { id, name, gender, age, breed, weight, image };
-    setPets((prevPets) => [...prevPets, newPet]);
+    getPetById(petId)
+    .then((response) => {
+      if (response.status === 200) {
+        setPets((prevPets) => [...prevPets, response.data]);
+        setErrorMessage(null);
+      } else {
+        setErrorMessage("Unexpected response status. Please try again.");
+      }
+    })
     setAddPetDialogOpen(false);
   };
 

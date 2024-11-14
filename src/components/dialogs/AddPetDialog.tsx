@@ -8,14 +8,16 @@ import {
   Button,
   TextField,
   Typography,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
-import {useApiStore} from "../../state/apiStore";
+import { useApiStore } from "../../state/apiStore";
 import { Pet } from "../../models/Pet";
 
 interface AddPetDialogProps {
   open: boolean;
   onClose: () => void;
-  onAddPet: (pet: Pet) => void;
+  onAddPet: (id: number) => void;
 }
 
 const AddPetDialog: React.FC<AddPetDialogProps> = ({
@@ -25,7 +27,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
 }) => {
   const { addPet } = useApiStore();
   const [name, setName] = React.useState("");
-  const [gender, setGender] = React.useState("");
+  const [gender, setGender] = React.useState(false);
   const [age, setAge] = React.useState("");
   const [breed, setBreed] = React.useState("");
   const [weight, setWeight] = React.useState("");
@@ -34,7 +36,11 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
 
   const handleAddClick = () => {
     setError(null);
-    addPet({ name, gender, age, breed, weight, image })
+
+    const parsedAge = parseInt(age, 10);
+    const parsedWeight = parseInt(weight, 10);
+
+    addPet({ name, gender, age: parsedAge, breed, weight: parsedWeight, image })
       .then((response) => {
         if (response.status === 200) {
           onAddPet(response.data);
@@ -48,7 +54,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           setError("Network error. Please check your connection.");
           return;
         }
-        
+
         switch (error.response.status) {
           case 400:
             setError("Bad request. Please check the pet details.");
@@ -64,7 +70,6 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
         }
       });
   };
-  
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -95,15 +100,15 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           InputLabelProps={{ sx: { typography: "body2" } }}
         />
 
-        <TextField
-          margin="dense"
-          label="Gender"
-          type="text"
-          fullWidth
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          InputProps={{ sx: { typography: "body2" } }}
-          InputLabelProps={{ sx: { typography: "body2" } }}
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={gender}
+              onChange={(e) => setGender(e.target.checked)}
+              color="primary"
+            />
+          }
+          label="Is male?"
         />
 
         <TextField

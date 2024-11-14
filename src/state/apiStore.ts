@@ -14,22 +14,22 @@ type ApiStore = {
   login: (email: string, password: string) => Promise<AxiosResponse>;
   addPet: (petData: {
     name: string;
-    gender: string;
-    age: string;
+    gender: boolean;
+    age: number;
     breed: string;
-    weight: string;
+    weight: number;
     image: string;
   }) => Promise<AxiosResponse>
   updatePet: (id: number, petData: {
     name: string;
-    gender: string;
-    age: string;
+    gender: boolean;
+    age: number;
     breed: string;
-    weight: string;
+    weight: number;
     image: string;
   }) => Promise<AxiosResponse>;
   getAllPetsByUserId: () => Promise<AxiosResponse>;
-  getPetById: (petId: string) => Promise<AxiosResponse>;
+  getPetById: (petId: number) => Promise<AxiosResponse>;
 };
 
 export const useApiStore = create<ApiStore>((set, get) => {
@@ -44,13 +44,12 @@ export const useApiStore = create<ApiStore>((set, get) => {
     (config) => {
       // get jwt token from local storage
       const jwtToken = localStorage.getItem("jwtToken");
-
       // if jwt token is present, add it to the Authorization header
       if (jwtToken) {
         config.headers.Authorization = `Bearer ${jwtToken}`;
       } else {
         // if jwt token is not present, remove the Authorization header
-        delete config.headers.Authorization;
+        // delete config.headers.Authorization;
       }
 
       return config;
@@ -70,6 +69,10 @@ export const useApiStore = create<ApiStore>((set, get) => {
       });
     },
     login: async (email: string, password: string) => {
+      localStorage.removeItem("jwtToken");
+      localStorage.removeItem("userFirstName");
+      localStorage.removeItem("userLastName");
+
       return await axiosInstance.post("/auth/login", {
         email,
         password,
@@ -77,7 +80,7 @@ export const useApiStore = create<ApiStore>((set, get) => {
     },
     addPet: async (petData) => {
       try {
-        return await axiosInstance.post("/add", petData);
+        return await axiosInstance.post("/pets/add", petData);
       } catch (error) {
         return Promise.reject(error);
       }
@@ -97,7 +100,7 @@ export const useApiStore = create<ApiStore>((set, get) => {
         return Promise.reject(error);
       }
     },
-    getPetById: async (petId: string) => {
+    getPetById: async (petId: number) => {
       try {
         const response = await axiosInstance.get(`/pets/${petId}`);
         return response;
