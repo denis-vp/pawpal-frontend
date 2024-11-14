@@ -1,15 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import PetCard from "./PetCard";
 import { Pet } from "../../models/Pet";
 import AddPetDialog from "../dialogs/AddPetDialog";
+import { useApiStore } from "../../state/apiStore";
 
-interface PetsListProps {
-  pets: Pet[];
-}
-
-const PetsList: React.FC<PetsListProps> = ({ pets }) => {
+const PetsList: React.FC = () => {
+  const [pets, setPets] = useState<Pet[]>([]);
   const [addPetDialogOpen, setAddPetDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const { getAllPetsByUserId } = useApiStore();
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const response = await getAllPetsByUserId();
+        
+        switch (response.status) {
+          case 200:
+            if (Array.isArray(response.data)) { 
+              setPets(response.data);           
+              setErrorMessage(null);
+            } else {
+              setErrorMessage("Unexpected data format received from server.");
+            }
+            break;
+
+          case 400:
+            setErrorMessage("Invalid user ID provided. Please try again.");
+            break;
+
+          case 404:
+            setErrorMessage("No pets found for the specified user ID.");
+            break;
+
+          case 500:
+            setErrorMessage("Server encountered an error. Please try again later.");
+            break;
+
+          default:
+            setErrorMessage("An unexpected error occurred. Please try again.");
+            break;
+        }
+      } catch (error) {
+        setErrorMessage("Network error or server is unreachable.");
+        console.error("Error fetching pets:", error);
+      }
+    };
+
+    fetchPets();
+  }, [getAllPetsByUserId]);
 
   const handleAddClick = () => setAddPetDialogOpen(true);
   const handleCloseDialog = () => setAddPetDialogOpen(false);
@@ -24,23 +65,21 @@ const PetsList: React.FC<PetsListProps> = ({ pets }) => {
     image: string
   ) => {
     const newPet: Pet = { id, name, gender, age, breed, weight, image };
-    console.log("Adding new pet:", newPet);
-    // Implement logic to add pet
+    setPets((prevPets) => [...prevPets, newPet]);
     setAddPetDialogOpen(false);
   };
 
   return (
-    <Box
-      sx={{
-        padding: 4,
-        marginTop: "100px",
-        textAlign: "center",
-        width: "100%",
-      }}
-    >
+    <Box sx={{ padding: 4, marginTop: "100px", textAlign: "center", width: "100%" }}>
       <Typography variant="h1" sx={{ textAlign: "center" }}>
         All Pets Page
       </Typography>
+
+      {errorMessage && (
+        <Typography variant="body1" color="error" sx={{ marginTop: 2 }}>
+          {errorMessage}
+        </Typography>
+      )}
 
       <Grid container spacing={4} mt={4}>
         {pets.map((pet) => (
@@ -55,23 +94,13 @@ const PetsList: React.FC<PetsListProps> = ({ pets }) => {
           variant="contained"
           disableElevation
           onClick={handleAddClick}
-          sx={{
-            mr: 20,
-            mb: 2,
-            mt: 2,
-            ml: 20,
-            fontSize: "1.25rem",
-          }}
+          sx={{ mr: 20, mb: 2, mt: 2, ml: 20, fontSize: "1.25rem", color: 'primary.contrastText' }}
         >
           Add Pet Profile
         </Button>
       </Box>
 
-      <AddPetDialog
-        open={addPetDialogOpen}
-        onClose={handleCloseDialog}
-        onAddPet={handleAddPet}
-      />
+      <AddPetDialog open={addPetDialogOpen} onClose={handleCloseDialog} onAddPet={handleAddPet} />
     </Box>
   );
 };

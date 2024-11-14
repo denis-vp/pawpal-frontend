@@ -10,6 +10,7 @@ import theme from "./theme";
 import { CssBaseline } from "@mui/material";
 import LogIn from "./components/auth/LogIn";
 import SignUp from "./components/auth/SignUp";
+import AppointmentForm from "./components/vet-appointments/AppointmentForm";
 
 const petsData = [
   {
@@ -53,14 +54,18 @@ const petsData = [
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LogIn/>,
+  },
+  {
+    path: "/appointments",
+    element: <AppointmentForm pets={petsData} />,
+  },
+  {
+    path: "/login",
     element: <LogIn />,
   },
   {
-    path: "/log-in",
-    element: <LogIn />,
-  },
-  {
-    path: "/sign-up",
+    path: "/signup",
     element: <SignUp />,
   },
   {
@@ -68,7 +73,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetProfile petsData={petsData} />
+        <PetProfile />
       </>
     ),
   },
@@ -77,7 +82,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <PetsList pets={petsData} />
+        <PetsList />
       </>
     ),
   },
