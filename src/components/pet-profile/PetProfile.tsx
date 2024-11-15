@@ -74,7 +74,7 @@ const PetProfile: React.FC = () => {
     const fetchPet = async () => {
       try {
         if (id) {
-          const response = await getPetById(id);
+          const response = await getPetById(parseInt(id));
           switch (response.status) {
             case 200:
               setPetDetails(response.data);

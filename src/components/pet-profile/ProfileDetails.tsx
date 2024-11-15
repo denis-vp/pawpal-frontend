@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Grid, Typography, Box, Button } from "@mui/material";
 import { Pet } from "../../models/Pet";
 import EditPetDialog from "../dialogs/EditPetDialog";
+import PetsIcon from '@mui/icons-material/Pets';
 
 interface ProfileDetailsProps {
   petDetails: Pet;
@@ -45,11 +46,17 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
             },
           }}
         >
-          <img
+          {/*<img
             src={petDetails.image}
             alt="Pet"
             style={{ width: "100%", height: "100%", borderRadius: "50%" }}
           />
+          */}
+          <PetsIcon 
+  fontSize="large" 
+  sx={{ fontSize: 190, margin: 2, color:'#ffffff'}} 
+/>
+
         </Box>
       </Grid>
 
@@ -120,7 +127,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
               mr: 4,
             }}
           >
-            {petDetails.gender}
+            {petDetails.gender ? 'Male' : 'Female'}
           </Typography>
           <Typography
             variant="body2"
@@ -160,8 +167,8 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
       <EditPetDialog
         open={editPetDialogOpen}
         onClose={handleDialogClose}
-        pet={petDetails} // Pass the pet details here
-        onUpdatePet={handleUpdatePet} // Handle the pet update
+        pet={petDetails} 
+        onUpdatePet={handleUpdatePet}
       />
     </Grid>
   );

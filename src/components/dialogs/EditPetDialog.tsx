@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +7,8 @@ import {
   Button,
   TextField,
   Typography,
+  Box,
+  Switch,
 } from "@mui/material";
 import { useApiStore } from "../../state/apiStore";
 
@@ -22,7 +23,7 @@ export interface Pet {
   id: number;
   name: string;
   image: string;
-  gender: string;
+  gender: boolean;
   age: string;
   breed: string;
   weight: string;
@@ -36,7 +37,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
 }) => {
   const { updatePet } = useApiStore();
   const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(false);
   const [age, setAge] = useState("");
   const [breed, setBreed] = useState("");
   const [weight, setWeight] = useState("");
@@ -56,9 +57,10 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
 
   const handleUpdateClick = () => {
     setError(null);
-  
+    const parsedAge = parseInt(age);
+    const parsedWeight = parseInt(weight)
     if (pet) {
-      updatePet(pet.id, { name, gender, age, breed, weight, image })
+      updatePet(pet.id, { name, gender, age: parsedAge, breed, weight: parsedWeight, image })
         .then((response) => {
           if (response.status === 200) {
             onUpdatePet(response.data);
@@ -72,7 +74,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
             setError("Network error. Please check your connection.");
             return;
           }
-  
+
           switch (error.response.status) {
             case 400:
               setError("Bad request. Please check the pet details.");
@@ -92,7 +94,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
         });
     }
   };
-  
+
 
   if (!pet) return null;
 
@@ -102,7 +104,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
         <Typography variant="body1">Edit Pet</Typography>
       </DialogTitle>
       <DialogContent>
-      {error && <Typography color="error">{error}</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
         <TextField
           margin="dense"
           label="Name"
@@ -125,16 +127,26 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
           InputProps={{ sx: { typography: "body2" } }}
         />
 
-        <TextField
-          margin="dense"
-          label="Gender"
-          type="text"
-          fullWidth
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
-          InputProps={{ sx: { typography: "body2" } }}
-        />
+        <Box display="flex" alignItems="center" my={2}>
+          <Typography variant="body2" color="secondary.dark" sx={{ fontWeight: "bold", mr: 1 }}>
+            Male
+          </Typography>
+          <Switch
+            checked={!gender} 
+            onChange={(e) => setGender(!e.target.checked)}
+            sx={{
+              "& .MuiSwitch-thumb": {
+                backgroundColor: gender ? "primary.main" : "#fb6f92"
+              },
+              "& .MuiSwitch-track": {
+                backgroundColor: gender ? "secondary.light" : "#ffc2d1"
+              },
+            }}
+          />
+          <Typography variant="body2" color="#fb6f92" sx={{ fontWeight: "bold", ml: 1 }}>
+            Female
+          </Typography>
+        </Box>
 
         <TextField
           margin="dense"

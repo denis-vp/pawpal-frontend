@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Card,
-  CardMedia,
   CardContent,
   Typography,
   IconButton,
@@ -10,6 +9,7 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { Pet } from "../../models/Pet";
+import PetsIcon from '@mui/icons-material/Pets';
 
 interface PetCardProps {
   pet: Pet;
@@ -34,19 +34,19 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
         transition: "transform 0.3s",
         "&:hover": { transform: "scale(1.05)" },
         backgroundColor: "secondary.light",
-        ml: 15,
-        mr: 15,
+        width: "90%",
+        maxWidth: "900px", 
+        mx: "auto",
         height: 110,
         borderRadius: "50px",
       }}
     >
       <Box display="flex" alignItems="center">
-        <CardMedia
-          component="img"
-          image={pet.image}
-          alt={pet.name}
-          sx={{ width: 90, height: 90, borderRadius: "80%", ml: 3, mr: 2 }}
+        <PetsIcon
+          fontSize="large"
+          sx={{ fontSize: 60, margin: 2 }}
         />
+
         <CardContent>
           <Box display={"flex"} alignItems="center">
             <Typography variant="body1" fontWeight="bold" mt={1}>
@@ -56,11 +56,11 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
               display={"flex"}
               alignItems="center"
               color={"text.secondary"}
-              ml={4}
+              ml={2}
               mt={5}
             >
               <Typography variant="body2">
-                {pet.gender}, {pet.breed}, {pet.age}, {pet.weight}
+                {pet.gender ? "Male" : "Female"}, {pet.breed}, {pet.age}, {pet.weight}
               </Typography>
             </Box>
           </Box>
