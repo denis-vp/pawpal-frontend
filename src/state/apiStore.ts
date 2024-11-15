@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { create } from "zustand/react";
+import { AppointmentStatus } from "../models/AppointmentStatus";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL as string;
 
@@ -30,6 +31,15 @@ type ApiStore = {
   }) => Promise<AxiosResponse>;
   getAllPetsByUserId: () => Promise<AxiosResponse>;
   getPetById: (petId: number) => Promise<AxiosResponse>;
+  addVeterinaryAppointment: (appointment: {
+    id: number;
+    userId: number;
+    petId: number;
+    status: AppointmentStatus;
+    localDateTime: string;
+    duration: number;
+    cost: number;
+  }) => Promise<AxiosResponse>;
 };
 
 export const useApiStore = create<ApiStore>((set, get) => {
@@ -108,5 +118,13 @@ export const useApiStore = create<ApiStore>((set, get) => {
         return Promise.reject(error);
       }
     },
+    addVeterinaryAppointment: async (appointment) => {
+      try{
+        const response = await axiosInstance.post(`/api/veterinary-appointments/add`, appointment);
+        return response;
+      } catch(error){
+        return Promise.reject(error);
+      }
+    }
   };
 });
