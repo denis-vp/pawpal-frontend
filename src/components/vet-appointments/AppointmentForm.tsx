@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { Pet } from "../dialogs/EditPetDialog";
 import {
   Button,
   MenuItem,
@@ -7,38 +5,66 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import type { } from "@mui/x-date-pickers-pro/themeAugmentation";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import type { } from "@mui/x-date-pickers/themeAugmentation";
+import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
-import axios from "axios";
 import { AppointmentStatus } from "../../models/AppointmentStatus";
-import type {} from "@mui/x-date-pickers/themeAugmentation";
-import type {} from "@mui/x-date-pickers-pro/themeAugmentation";
+import { useApiStore } from "../../state/apiStore";
+import { Pet } from "../dialogs/EditPetDialog";
 
 const APPOINTMENT_DURATION = 30;
 const APPOINTMENT_BASE_COST = 25.0;
 
-// const theme = createTheme({
-//   components: {
-//     MuiDatePicker: {
-//       styleOverrides: {
-//         root: {
-//           backgroundColor: 'white',
-//         },
-//       },
-//     },
-//   },
-// });
-
-interface AppointmentFormProps {
-  pets: Pet[];
-}
-
-function AppointmentForm({ pets }: AppointmentFormProps) {
+const AppointmentForm: React.FC = () => {
+  const [pets, setPets] = useState<Pet[]>([]);
   const [selectedPet, setSelectedPet] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [showPetDropdown, setShowPetDropdown] = useState(false);
   const [showTimeDropdown, setShowTimeDropdown] = useState(false);
+
+  const { addVeterinaryAppointment, getAllPetsByUserId } = useApiStore();
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const response = await getAllPetsByUserId();
+        
+        switch (response.status) {
+          case 200:
+            if (Array.isArray(response.data)) { 
+              setPets(response.data);           
+            } else {
+              alert("Unexpected data format received from server.");
+            }
+            break;
+
+          case 400:
+            alert("Invalid user ID provided. Please try again.");
+            break;
+
+          case 404:
+            alert("No pets found for the specified user ID.");
+            break;
+
+          case 500:
+            alert("Server encountered an error. Please try again later.");
+            break;
+
+          default:
+            alert("An unexpected error occurred. Please try again.");
+            break;
+        }
+      } catch (error) {
+        alert("Network error or server is unreachable.");
+        console.error("Error fetching pets:", error);
+      }
+    };
+
+    fetchPets();
+  }, [getAllPetsByUserId]);
 
   const handlePetSelect = (id: number) => {
     setSelectedPet(id);
@@ -56,7 +82,8 @@ function AppointmentForm({ pets }: AppointmentFormProps) {
 
   // HARDCODED TIMES
   const availableTimes = ["13:30", "14:00", "14:30", "15:00", "15:30"];
-  const handleSubmit = async () => {
+
+  const handleSubmit = () => {
     if (!selectedPet || !selectedDate || !selectedTime) {
       alert("Please fill out all required fields.");
       return;
@@ -66,31 +93,29 @@ function AppointmentForm({ pets }: AppointmentFormProps) {
     const dateTimeString = `${selectedDate.toISOString().split("T")[0]}T${selectedTime}:00`;
     // Create the request body
     const appointmentData = {
-      petId: pets[selectedPet].id,
+      id: 0,
+      userId: 1,
+      petId: pets[selectedPet-1].id,
       status: AppointmentStatus.SCHEDULED,
       localDateTime: dateTimeString,
       duration: APPOINTMENT_DURATION,
       cost: APPOINTMENT_BASE_COST,
     };
 
-    await axios
-      .post(
-        `${import.meta.env.API_URL}/api/veterinary-appointments/add`,
-        appointmentData
-      )
-      .then((response) => {
-        if (response.status === 201) {
-          console.log("Appointment created:", response.data);
+    addVeterinaryAppointment(appointmentData)
+      .then(response => {
+        if(response.status === 201){
+          console.log("Appointment created: ", response.data);
           alert("Appointment created successfully!");
         }
       })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          alert("There was an error creating the appointment.");
+      .catch(error => {
+        if(error.response.status === 404){
+          alert("There was an error creating the appointment");
         } else {
-          alert("Backend down!");
+          alert("The server is down.")
         }
-      });
+      })
   };
 
   return (

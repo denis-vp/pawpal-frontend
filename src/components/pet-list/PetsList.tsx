@@ -71,39 +71,50 @@ const PetsList: React.FC = () => {
   };
 
   return (
-    <Box sx={{ padding: 4, marginTop: "100px", textAlign: "center", width: "100%" }}>
-      <Typography variant="h1" sx={{ textAlign: "center" }}>
-        All Pets Page
-      </Typography>
-
-      {errorMessage && (
-        <Typography variant="body1" color="error" sx={{ marginTop: 2 }}>
-          {errorMessage}
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        width: '100vw',
+        mt: '100px'
+      }}
+    >
+      <Box sx={{ padding: 4, textAlign: 'center', width: '100%', maxWidth: '800px' }}>
+        <Typography variant="h1" sx={{ textAlign: 'center' }}>
+          All Pets Page
         </Typography>
-      )}
-
-      <Grid container spacing={4} mt={4}>
-        {pets.map((pet) => (
-          <Grid item xs={12} key={pet.id}>
-            <PetCard pet={pet} />
-          </Grid>
-        ))}
-      </Grid>
-
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <Button
-          variant="contained"
-          disableElevation
-          onClick={handleAddClick}
-          sx={{ mr: 20, mb: 2, mt: 2, ml: 20, fontSize: "1.25rem", color: 'primary.contrastText' }}
-        >
-          Add Pet Profile
-        </Button>
+  
+        {errorMessage && (
+          <Typography variant="body1" color="error" sx={{ marginTop: 2 }}>
+            {errorMessage}
+          </Typography>
+        )}
+  
+        <Grid container spacing={4} mt={3}>
+          {pets.map((pet) => (
+            <Grid item xs={12} key={pet.id}>
+              <PetCard pet={pet} />
+            </Grid>
+          ))}
+        </Grid>
+  
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Button
+            variant="contained"
+            disableElevation
+            onClick={handleAddClick}
+            sx={{ mr: 20, mb: 2, mt: 2, ml: 20, fontSize: '1.25rem', color: 'primary.contrastText' }}
+          >
+            Add Pet Profile
+          </Button>
+        </Box>
+  
+        <AddPetDialog open={addPetDialogOpen} onClose={handleCloseDialog} onAddPet={handleAddPet} />
       </Box>
-
-      <AddPetDialog open={addPetDialogOpen} onClose={handleCloseDialog} onAddPet={handleAddPet} />
     </Box>
-  );
+  );  
 };
 
 export default PetsList;

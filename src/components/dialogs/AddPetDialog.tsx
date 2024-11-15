@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import {
   Dialog,
   DialogTitle,
@@ -8,11 +7,10 @@ import {
   Button,
   TextField,
   Typography,
-  FormControlLabel,
-  Checkbox,
+  Switch,
+  Box,
 } from "@mui/material";
 import { useApiStore } from "../../state/apiStore";
-import { Pet } from "../../models/Pet";
 
 interface AddPetDialogProps {
   open: boolean;
@@ -27,7 +25,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
 }) => {
   const { addPet } = useApiStore();
   const [name, setName] = React.useState("");
-  const [gender, setGender] = React.useState(false);
+  const [gender, setGender] = React.useState(false); // false for female, true for male
   const [age, setAge] = React.useState("");
   const [breed, setBreed] = React.useState("");
   const [weight, setWeight] = React.useState("");
@@ -100,16 +98,26 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           InputLabelProps={{ sx: { typography: "body2" } }}
         />
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={gender}
-              onChange={(e) => setGender(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="Is male?"
-        />
+        <Box display="flex" alignItems="center" my={2}>
+          <Typography variant="body2" color="secondary.dark" sx={{ fontWeight: "bold", mr: 1 }}>
+            Male
+          </Typography>
+          <Switch
+            checked={!gender} // When false/female, the switch is toggled to the right
+            onChange={(e) => setGender(!e.target.checked)}
+            sx={{
+              "& .MuiSwitch-thumb": {
+                backgroundColor: gender ? "primary.main" : "#fb6f92"
+              },
+              "& .MuiSwitch-track": {
+                backgroundColor: gender ? "secondary.light" : "#ffc2d1"
+              },
+            }}
+          />
+          <Typography variant="body2" color="#fb6f92" sx={{ fontWeight: "bold", ml: 1 }}>
+            Female
+          </Typography>
+        </Box>
 
         <TextField
           margin="dense"
