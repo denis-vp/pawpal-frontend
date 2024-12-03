@@ -20,15 +20,18 @@ type ApiStore = {
     breed: string;
     weight: number;
     image: string;
-  }) => Promise<AxiosResponse>
-  updatePet: (id: number, petData: {
-    name: string;
-    gender: boolean;
-    age: number;
-    breed: string;
-    weight: number;
-    image: string;
   }) => Promise<AxiosResponse>;
+  updatePet: (
+    id: number,
+    petData: {
+      name: string;
+      gender: boolean;
+      age: number;
+      breed: string;
+      weight: number;
+      image: string;
+    }
+  ) => Promise<AxiosResponse>;
   getAllPetsByUserId: () => Promise<AxiosResponse>;
   getPetById: (petId: number) => Promise<AxiosResponse>;
   addVeterinaryAppointment: (appointment: {
@@ -59,7 +62,7 @@ export const useApiStore = create<ApiStore>((set, get) => {
         config.headers.Authorization = `Bearer ${jwtToken}`;
       } else {
         // if jwt token is not present, remove the Authorization header
-        // delete config.headers.Authorization;
+        delete config.headers.Authorization;
       }
 
       return config;
@@ -119,12 +122,15 @@ export const useApiStore = create<ApiStore>((set, get) => {
       }
     },
     addVeterinaryAppointment: async (appointment) => {
-      try{
-        const response = await axiosInstance.post(`/api/veterinary-appointments/add`, appointment);
+      try {
+        const response = await axiosInstance.post(
+          `/api/veterinary-appointments/add`,
+          appointment
+        );
         return response;
-      } catch(error){
+      } catch (error) {
         return Promise.reject(error);
       }
-    }
+    },
   };
 });

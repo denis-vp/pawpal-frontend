@@ -1,27 +1,27 @@
-import { Alert, Box, Link, Snackbar } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import Button from "@mui/material/Button/Button";
 import Checkbox from "@mui/material/Checkbox/Checkbox";
 import Container from "@mui/material/Container/Container";
 import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel";
-import Paper from "@mui/material/Paper/Paper";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useApiStore } from "../../state/apiStore";
-import theme from "../../theme";
+import pawpalLogo from "../assets/pawpal-logo.png";
+import { useApiStore } from "../state/apiStore";
+import { useSnackBarStore } from "../state/snackBarStore";
 
 const SIGN_UP = "/signup";
+const MAIN_PAGE = "/pets";
 
-function LogIn() {
+function LogInPage() {
   const navigate = useNavigate();
 
   const { login } = useApiStore();
+  const { openAlert } = useSnackBarStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = async (email: string, password: string) => {
     login(email, password)
@@ -31,26 +31,24 @@ function LogIn() {
           localStorage.setItem("jwtToken", data.token);
           localStorage.setItem("userFirstName", data.firstName);
           localStorage.setItem("userLastName", data.lastName);
-        
-          navigate("/pets");
+
+          navigate(MAIN_PAGE);
+          openAlert("Login successful.", "success");
         } else {
-          setError("Login failed. Please try again.");
-          setSnackbarOpen(true);
+          openAlert("Login failed. Please try again.", "error");
         }
       })
       .catch((error) => {
         if (!error.response) {
-          setError("Network error. Please try again later.");
-          setSnackbarOpen(true);
+          openAlert("Network error. Please try again later.", "error");
           return;
         }
 
         if (error.response.status === 401) {
-          setError("Invalid email or password.");
+          openAlert("Invalid email or password.", "error");
         } else {
-          setError("Login failed. Please try again.");
+          openAlert("Login failed. Please try again.", "error");
         }
-        setSnackbarOpen(true);
       });
   };
 
@@ -65,17 +63,19 @@ function LogIn() {
         backgroundColor: "background.default",
       }}
     >
-      <Paper
+      <Container
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          borderRadius: "16px",
-          gap: 8,
+          justifyContent: "space-around",
+          gap: 2,
           padding: 10,
-          backgroundColor: "primary.light",
-          border: `2px solid ${theme.palette.primary.main}`,
         }}
       >
+        <img
+          src={pawpalLogo}
+          alt="PawPal Logo"
+          style={{ width: "400px", height: "400px", border: "none" }}
+        />
         <Container
           sx={{
             display: "flex",
@@ -90,12 +90,21 @@ function LogIn() {
             e.preventDefault();
             if (email && password) {
               handleSubmit(email, password);
+            } else {
+              openAlert("Please fill in all fields.", "error");
             }
           }}
           noValidate
         >
-          <Typography variant="h5" align="left">
-            Log In to PawPal
+          <Typography
+            variant="h5"
+            align="left"
+            sx={{
+              fontWeight: "bold",
+              alignSelf: "center",
+            }}
+          >
+            Log In
           </Typography>
           <TextField
             label="Email"
@@ -129,39 +138,22 @@ function LogIn() {
               justifyContent: "space-between",
             }}
           >
-            <Link href="#" variant="body2">
+            <Link href="#" variant="body2" sx={{ color: "text.primary" }}>
               Forgot password?
             </Link>
-            <Link href="#" variant="body2" onClick={() => navigate(SIGN_UP)}>
+            <Link
+              href="#"
+              variant="body2"
+              onClick={() => navigate(SIGN_UP)}
+              sx={{ color: "text.primary" }}
+            >
               Don't have an account? Sign Up
             </Link>
           </Box>
         </Container>
-        <img
-          src="https://placehold.co/400x400"
-          alt="PawPal Logo"
-          style={{ borderRadius: "16px" }}
-        />
-      </Paper>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => {
-          setSnackbarOpen(false);
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setSnackbarOpen(false);
-          }}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {error}
-        </Alert>
-      </Snackbar>
+      </Container>
     </Box>
   );
 }
 
-export default LogIn;
+export default LogInPage;

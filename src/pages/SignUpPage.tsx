@@ -1,26 +1,25 @@
-import { Alert, Box, Link, Snackbar } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import Button from "@mui/material/Button/Button";
 import Container from "@mui/material/Container/Container";
-import Paper from "@mui/material/Paper/Paper";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useApiStore } from "../../state/apiStore";
-import theme from "../../theme";
+import pawpalLogo from "../assets/pawpal-logo.png";
+import { useApiStore } from "../state/apiStore";
+import { useSnackBarStore } from "../state/snackBarStore";
 
 const LOG_IN = "/login";
 
-function SignUp() {
+function SignUpPage() {
   const navigate = useNavigate();
 
   const { register } = useApiStore();
+  const { openAlert } = useSnackBarStore();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = async (
     firstName: string,
@@ -32,23 +31,20 @@ function SignUp() {
         if (response.status === 200) {
           navigate(LOG_IN);
         } else {
-          setError("Registration failed. Please try again.");
-          setSnackbarOpen(true);
+          openAlert("Registration failed. Please try again.", "error");
         }
       })
       .catch((error) => {
         if (!error.response) {
-          setError("Network error. Please try again later.");
-          setSnackbarOpen(true);
+          openAlert("Network error. Please try again later.", "error");
           return;
         }
 
         if (error.response.status === 409) {
-          setError("User already exists.");
+          openAlert("User already exists.", "error");
         } else {
-          setError("Registration failed. Please try again.");
+          openAlert("Registration failed. Please try again.", "error");
         }
-        setSnackbarOpen(true);
       });
   };
 
@@ -63,17 +59,19 @@ function SignUp() {
         backgroundColor: "background.default",
       }}
     >
-      <Paper
+      <Container
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          borderRadius: "16px",
-          gap: 8,
+          justifyContent: "space-around",
+          gap: 2,
           padding: 10,
-          backgroundColor: "primary.light",
-          border: `2px solid ${theme.palette.primary.main}`,
         }}
       >
+        <img
+          src={pawpalLogo}
+          alt="PawPal Logo"
+          style={{ width: "400px", height: "400px", border: "none" }}
+        />
         <Container
           sx={{
             display: "flex",
@@ -88,11 +86,20 @@ function SignUp() {
             e.preventDefault();
             if (firstName && lastName && email) {
               handleSubmit(firstName, lastName, email);
+            } else {
+              openAlert("Please fill in all fields.", "error");
             }
           }}
           noValidate
         >
-          <Typography variant="h5" align="left">
+          <Typography
+            variant="h5"
+            align="left"
+            sx={{
+              fontWeight: "bold",
+              alignSelf: "center",
+            }}
+          >
             Create your PawPal Account
           </Typography>
           <Box
@@ -138,36 +145,14 @@ function SignUp() {
             href="#"
             variant="body2"
             onClick={() => navigate(LOG_IN)}
-            sx={{ alignSelf: "start" }}
+            sx={{ alignSelf: "start", color: "text.primary" }}
           >
             Already have an account? Log In
           </Link>
         </Container>
-        <img
-          src="https://placehold.co/400x400"
-          alt="PawPal Logo"
-          style={{ borderRadius: "16px" }}
-        />
-      </Paper>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => {
-          setSnackbarOpen(false);
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setSnackbarOpen(false);
-          }}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {error}
-        </Alert>
-      </Snackbar>
+      </Container>
     </Box>
   );
 }
 
-export default SignUp;
+export default SignUpPage;

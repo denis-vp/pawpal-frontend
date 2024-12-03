@@ -1,121 +1,59 @@
-import Header from "./components/Header";
-import PetProfile from "./components/pet-profile/PetProfile";
-import petPicture from "../src/assets/pet-picture.jpg";
-import PetsList from "./components/pet-list/PetsList";
-import AddPetDialog from "./components/dialogs/AddPetDialog";
-import EditPetDialog from "./components/dialogs/EditPetDialog";
 import { ThemeProvider } from "@emotion/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import theme from "./theme";
+import theme from "./utils/theme";
 import { CssBaseline } from "@mui/material";
-import LogIn from "./components/auth/LogIn";
-import SignUp from "./components/auth/SignUp";
-import AppointmentForm from "./components/vet-appointments/AppointmentForm";
-
-const petsData = [
-  {
-    id: 1,
-    name: "Buddy",
-    image: petPicture,
-    gender: true,
-    age: "2 years",
-    breed: "Golden Retriever",
-    weight: "25 kg",
-  },
-  {
-    id: 2,
-    name: "Bella",
-    image: petPicture,
-    gender: false,
-    age: "3 years",
-    breed: "Labrador",
-    weight: "22 kg",
-  },
-  {
-    id: 3,
-    name: "Bella",
-    image: petPicture,
-    gender: false,
-    age: "3 years",
-    breed: "Labrador",
-    weight: "22 kg",
-  },
-  {
-    id: 4,
-    name: "Bella",
-    image: petPicture,
-    gender: false,
-    age: "3 years",
-    breed: "Labrador",
-    weight: "22 kg",
-  },
-];
+import LogInPage from "./pages/LogInPage";
+import SignUpPage from "./pages/SignUpPage";
+import AlertSnackBar from "./components/AlertSnackBar";
+import { useSnackBarStore } from "./state/snackBarStore";
+import Layout from "./components/Layout";
+import PetsPage from "./pages/PetsPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LogIn/>,
-  },
-  {
-    path: "/appointments",
-    element: <AppointmentForm pets={petsData} />,
+    element: <LogInPage />,
   },
   {
     path: "/login",
-    element: <LogIn />,
+    element: <LogInPage />,
   },
   {
     path: "/signup",
-    element: <SignUp />,
-  },
-  {
-    path: "/:id",
-    element: (
-      <>
-        <Header />
-        <PetProfile />
-      </>
-    ),
+    element: <SignUpPage />,
   },
   {
     path: "/pets",
-    element: (
-      <>
-        <Header />
-        <PetsList />
-      </>
-    ),
+    element: <Layout children={<PetsPage/>} />,
   },
   {
-    path: "/add-pet",
-    element: (
-      <>
-        <Header />
-        <AddPetDialog open={true} onClose={() => {}} onAddPet={() => {}} />
-      </>
-    ),
+    path: "/appointments",
+    element: <Layout children={<></>} />,
   },
   {
-    path: "/edit-pet",
-    element: (
-      <>
-        <Header />
-        <EditPetDialog
-          open={true}
-          onClose={() => {}}
-          pet={petsData[0]}
-          onUpdatePet={() => {}}
-        />
-      </>
-    ),
+    path: "/profile",
+    element: <Layout children={<></>} />,
+  },
+  {
+    path: "/notifications",
+    element: <Layout children={<></>} />,
   },
 ]);
 
 function App() {
+  const { isOpenAlert, alertText, severity, setIsOpenAlert } =
+    useSnackBarStore();
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <RouterProvider router={router} />
+      <AlertSnackBar
+        open={isOpenAlert}
+        severity={severity}
+        text={alertText}
+        setIsOpenAlert={setIsOpenAlert}
+      />
     </ThemeProvider>
   );
 }

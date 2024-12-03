@@ -4,7 +4,7 @@ import { Box, Typography, CircularProgress, styled, Button, CssBaseline, Grid, T
 import { Pet } from "../../models/Pet";
 import ProfileDetails from "./ProfileDetails";
 import { useApiStore } from "../../state/apiStore";
-import theme from "../../theme";
+import theme from "../../utils/theme";
 import DocumentCard from "./DocumentCard";
 import MedicalLogCard from "./MedicalLogCard";
 import VaccineLogCard from "./VaccineLogCard";
