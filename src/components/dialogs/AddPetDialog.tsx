@@ -11,6 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import { useApiStore } from "../../state/apiStore";
+import { useSnackBarStore } from "../../state/snackBarStore";
 
 interface AddPetDialogProps {
   open: boolean;
@@ -30,10 +31,9 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   const [breed, setBreed] = React.useState("");
   const [weight, setWeight] = React.useState("");
   const [image, setImage] = React.useState("");
-  const [error, setError] = React.useState<string | null>(null);
+  const { openAlert } = useSnackBarStore();
 
   const handleAddClick = () => {
-    setError(null);
 
     const parsedAge = parseInt(age, 10);
     const parsedWeight = parseInt(weight, 10);
@@ -44,27 +44,27 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           onAddPet(response.data);
           onClose();
         } else {
-          setError("Unexpected response status. Please try again.");
+          openAlert("Unexpected response status. Please try again.", 'error');
         }
       })
       .catch((error) => {
         if (!error.response) {
-          setError("Network error. Please check your connection.");
+          openAlert("Network error. Please check your connection.", 'error');
           return;
         }
 
         switch (error.response.status) {
           case 400:
-            setError("Bad request. Please check the pet details.");
+            openAlert("Bad request. Please check the pet details.", 'error');
             break;
           case 401:
-            setError("Unauthorized access. Please log in.");
+            openAlert("Unauthorized access. Please log in.", 'error');
             break;
           case 500:
-            setError("Server error. Please try again later.");
+            openAlert("Server error. Please try again later.", 'error');
             break;
           default:
-            setError("Failed to add pet. Please try again.");
+            openAlert("Failed to add pet. Please try again.", 'error');
         }
       });
   };
@@ -72,10 +72,9 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
-        <Typography variant="body1">Add Pet</Typography>
+        <Typography variant="body1">Add New Animal</Typography>
       </DialogTitle>
       <DialogContent>
-        {error && <Typography color="error">{error}</Typography>}
         <TextField
           margin="dense"
           label="Name"
@@ -107,10 +106,10 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
             onChange={(e) => setGender(!e.target.checked)}
             sx={{
               "& .MuiSwitch-thumb": {
-                backgroundColor: gender ? "primary.main" : "#fb6f92"
+                backgroundColor: gender ? "#529ff7" : "#fb6f92",
               },
               "& .MuiSwitch-track": {
-                backgroundColor: gender ? "secondary.light" : "#ffc2d1"
+                backgroundColor: gender ? "#add3ff" : "#fcd9fa",
               },
             }}
           />
@@ -153,14 +152,10 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} sx={{ typography: "body2" }}>
+        <Button onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          onClick={handleAddClick}
-          color="primary"
-          sx={{ typography: "body2" }}
-        >
+        <Button onClick={handleAddClick}>
           Add
         </Button>
       </DialogActions>

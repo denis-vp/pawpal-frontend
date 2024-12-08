@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Grid, Tooltip } from "@mui/material";
 import { useApiStore } from "../state/apiStore";
 import { Pet } from "../models/Pet";
 import PetCard from "../components/pets-page/PetCard";
 import AddPetDialog from "../components/dialogs/AddPetDialog";
 import { useSnackBarStore } from "../state/snackBarStore";
+import AddIcon from "@mui/icons-material/Add";
 
 const PetsPage: React.FC = () => {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -82,19 +83,29 @@ const PetsPage: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
         padding: 4,
+        position: "relative", 
       }}
     >
-      <Button
-        variant="contained"
-        disableElevation
-        onClick={handleAddClick}
-        sx={{
-          fontSize: "1.25rem",
-          color: "primary.contrastText",
-        }}
-      >
-        Add Pet Profile
-      </Button>
+      <Tooltip title="Add New Animal">
+        <AddIcon
+          onClick={handleAddClick}
+          fontSize="large"
+          sx={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            color: "black",
+            padding: 1,
+            borderRadius: "50%",
+            cursor: "pointer",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            "&:hover": {
+              transform: "scale(1.2)",
+              boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.3)",
+            },
+          }}
+        />
+      </Tooltip>
 
       <Grid container spacing={4} mt={3}>
         {pets.map((pet) => (

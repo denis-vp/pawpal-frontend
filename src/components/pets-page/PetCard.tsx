@@ -32,13 +32,15 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
         padding: 2,
         cursor: "pointer",
         transition: "transform 0.3s",
-        "&:hover": { transform: "scale(1.05)" },
-        backgroundColor: "secondary.light",
+        "&:hover": { 
+          transform: "scale(1.05)",
+          backgroundColor: "primary.main",
+        },
         width: "90%",
         maxWidth: "900px", 
         mx: "auto",
         height: 110,
-        borderRadius: "50px",
+        borderRadius: "20px",
       }}
     >
       <Box display="flex" alignItems="center">
@@ -60,7 +62,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
               mt={5}
             >
               <Typography variant="body2">
-                {pet.gender ? "Male" : "Female"}, {pet.breed}, {pet.age}, {pet.weight}
+                {pet.gender ? "Male" : "Female"}, {pet.breed}, {pet.age} years, {pet.weight} kg
               </Typography>
             </Box>
           </Box>
