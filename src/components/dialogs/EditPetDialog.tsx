@@ -11,6 +11,7 @@ import {
   Switch,
 } from "@mui/material";
 import { useApiStore } from "../../state/apiStore";
+import { useSnackBarStore } from "../../state/snackBarStore";
 
 interface EditPetDialogProps {
   open: boolean;
@@ -42,7 +43,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
   const [breed, setBreed] = useState("");
   const [weight, setWeight] = useState("");
   const [image, setImage] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const { openAlert } = useSnackBarStore();
 
   useEffect(() => {
     if (pet) {
@@ -56,7 +57,6 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
   }, [pet]);
 
   const handleUpdateClick = () => {
-    setError(null);
     const parsedAge = parseInt(age);
     const parsedWeight = parseInt(weight)
     if (pet) {
@@ -66,30 +66,30 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
             onUpdatePet(response.data);
             onClose();
           } else {
-            setError("Unexpected response status. Please try again.");
+            openAlert("Unexpected response status. Please try again.", "error");
           }
         })
         .catch((error) => {
           if (!error.response) {
-            setError("Network error. Please check your connection.");
+            openAlert("Network error. Please check your connection.", "error");
             return;
           }
 
           switch (error.response.status) {
             case 400:
-              setError("Bad request. Please check the pet details.");
+              openAlert("Bad request. Please check the pet details.", "error");
               break;
             case 401:
-              setError("Unauthorized access. Please log in.");
+              openAlert("Unauthorized access. Please log in.", "error");
               break;
             case 404:
-              setError("Pet not found. It may have been deleted.");
+              openAlert("Pet not found. It may have been deleted.", "error");
               break;
             case 500:
-              setError("Server error. Please try again later.");
+              openAlert("Server error. Please try again later.", "error");
               break;
             default:
-              setError("Failed to update pet. Please try again.");
+              openAlert("Failed to update pet. Please try again.", "error");
           }
         });
     }
@@ -104,7 +104,6 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
         <Typography variant="body1">Edit Pet</Typography>
       </DialogTitle>
       <DialogContent>
-        {error && <Typography color="error">{error}</Typography>}
         <TextField
           margin="dense"
           label="Name"
@@ -136,10 +135,10 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
             onChange={(e) => setGender(!e.target.checked)}
             sx={{
               "& .MuiSwitch-thumb": {
-                backgroundColor: gender ? "primary.main" : "#fb6f92"
+                backgroundColor: gender ? "#529ff7" : "#fb6f92",
               },
               "& .MuiSwitch-track": {
-                backgroundColor: gender ? "secondary.light" : "#ffc2d1"
+                backgroundColor: gender ? "#add3ff" : "#fcd9fa",
               },
             }}
           />

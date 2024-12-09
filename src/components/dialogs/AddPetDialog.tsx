@@ -9,8 +9,18 @@ import {
   Typography,
   Switch,
   Box,
+  styled,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { useApiStore } from "../../state/apiStore";
+import { useSnackBarStore } from "../../state/snackBarStore";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { AnimalType } from "../../models/AnimalType";
 
 interface AddPetDialogProps {
   open: boolean;
@@ -26,56 +36,103 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   const { addPet } = useApiStore();
   const [name, setName] = React.useState("");
   const [gender, setGender] = React.useState(false); // false for female, true for male
-  const [age, setAge] = React.useState("");
+  const [dateOfBirth, setDateOfBirth] = React.useState<Date | null>(null);
   const [breed, setBreed] = React.useState("");
   const [weight, setWeight] = React.useState("");
-  const [image, setImage] = React.useState("");
-  const [error, setError] = React.useState<string | null>(null);
+  const [image, setImage] = React.useState<string | null>(null);
+  const [imageName, setImageName] = React.useState<string | null>(null);
+  const [type, setAnimalType] = React.useState<AnimalType | "">("");
+  const { openAlert } = useSnackBarStore();
 
   const handleAddClick = () => {
-    setError(null);
+    if (!image) {
+      openAlert("Please upload an image of the pet.", "error");
+      return;
+    }
 
-    const parsedAge = parseInt(age, 10);
     const parsedWeight = parseInt(weight, 10);
 
-    addPet({ name, gender, age: parsedAge, breed, weight: parsedWeight, image })
+    addPet({ name, gender, dateOfBirth, breed, weight: parsedWeight, image, type })
       .then((response) => {
         if (response.status === 200) {
           onAddPet(response.data);
           onClose();
         } else {
-          setError("Unexpected response status. Please try again.");
+          openAlert("Unexpected response status. Please try again.", "error");
         }
       })
       .catch((error) => {
         if (!error.response) {
-          setError("Network error. Please check your connection.");
+          openAlert("Network error. Please check your connection.", "error");
           return;
         }
 
         switch (error.response.status) {
           case 400:
-            setError("Bad request. Please check the pet details.");
+            openAlert("Bad request. Please check the pet details.", "error");
             break;
           case 401:
-            setError("Unauthorized access. Please log in.");
+            openAlert("Unauthorized access. Please log in.", "error");
             break;
           case 500:
-            setError("Server error. Please try again later.");
+            openAlert("Server error. Please try again later.", "error");
             break;
           default:
-            setError("Failed to add pet. Please try again.");
+            openAlert("Failed to add pet. Please try again.", "error");
         }
       });
+  };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageName(file.name);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
-        <Typography variant="body1">Add Pet</Typography>
+        <Typography variant="body1">Add New Animal</Typography>
       </DialogTitle>
       <DialogContent>
-        {error && <Typography color="error">{error}</Typography>}
+        
+        <Box display="flex" alignItems="center" my={2}>
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+          >
+            Upload Image
+            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+          </Button>
+          {imageName && (
+            <Typography
+              variant="body2"
+              sx={{ ml: 2 }}
+            >
+              {imageName}
+            </Typography>
+          )}
+        </Box>
+
         <TextField
           margin="dense"
           label="Name"
@@ -87,48 +144,56 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           InputLabelProps={{ sx: { typography: "body2" } }}
         />
 
-        <TextField
-          margin="dense"
-          label="Image"
-          type="text"
-          fullWidth
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          InputProps={{ sx: { typography: "body2" } }}
-          InputLabelProps={{ sx: { typography: "body2" } }}
-        />
-
         <Box display="flex" alignItems="center" my={2}>
-          <Typography variant="body2" color="secondary.dark" sx={{ fontWeight: "bold", mr: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{ marginRight: 4 }}
+          >
+            Gender
+          </Typography>
+          <Typography
+            variant="body2"
+            color="secondary.dark"
+            sx={{ fontWeight: "bold", marginRight: 1 }}
+          >
             Male
           </Typography>
           <Switch
-            checked={!gender} // When false/female, the switch is toggled to the right
+            checked={!gender}
             onChange={(e) => setGender(!e.target.checked)}
             sx={{
               "& .MuiSwitch-thumb": {
-                backgroundColor: gender ? "primary.main" : "#fb6f92"
+                backgroundColor: gender ? "#529ff7" : "#fb6f92",
               },
               "& .MuiSwitch-track": {
-                backgroundColor: gender ? "secondary.light" : "#ffc2d1"
+                backgroundColor: gender ? "#add3ff" : "#fcd9fa",
               },
             }}
           />
-          <Typography variant="body2" color="#fb6f92" sx={{ fontWeight: "bold", ml: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: "bold", marginLeft: 1 }}
+          >
             Female
           </Typography>
         </Box>
 
-        <TextField
-          margin="dense"
-          label="Age"
-          type="text"
-          fullWidth
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          InputProps={{ sx: { typography: "body2" } }}
-          InputLabelProps={{ sx: { typography: "body2" } }}
-        />
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Date of Birth"
+            value={dateOfBirth}
+            onChange={(newDate) => setDateOfBirth(newDate)}
+            slotProps={{
+              textField: {
+                margin: "dense",
+                fullWidth: true,
+                InputProps: { sx: { typography: "body2" } },
+                InputLabelProps: { sx: { typography: "body2" } },
+              },
+            }}
+          />
+        </LocalizationProvider>
 
         <TextField
           margin="dense"
@@ -151,18 +216,28 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           InputProps={{ sx: { typography: "body2" } }}
           InputLabelProps={{ sx: { typography: "body2" } }}
         />
+
+        <FormControl fullWidth margin="dense">
+          {!type && (
+            <InputLabel id="animal-type-label">Animal Type</InputLabel>)}
+          <Select
+            labelId="animal-type-label"
+            value={type}
+            onChange={(e) => setAnimalType(e.target.value as AnimalType)}
+            fullWidth
+          >
+            {Object.values(AnimalType).map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} sx={{ typography: "body2" }}>
-          Cancel
-        </Button>
-        <Button
-          onClick={handleAddClick}
-          color="primary"
-          sx={{ typography: "body2" }}
-        >
-          Add
-        </Button>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleAddClick}>Add</Button>
       </DialogActions>
     </Dialog>
   );
