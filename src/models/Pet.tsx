@@ -1,10 +1,13 @@
+import { AnimalType } from "./AnimalType";
+
 export interface Pet {
     id: number;
     name: string;
     image: string;
-    gender: string;
-    age: string;
+    isMale: boolean;
+    dateOfBirth: Date;
     breed: string;
     weight: string;
+    type: AnimalType;
   }
   

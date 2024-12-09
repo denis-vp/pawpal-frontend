@@ -5,11 +5,12 @@ import {
   Typography,
   IconButton,
   Box,
+  useTheme,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { Pet } from "../../models/Pet";
-import PetsIcon from '@mui/icons-material/Pets';
+import petPicture from "../../assets/pet-picture.jpg";
 
 interface PetCardProps {
   pet: Pet;
@@ -17,63 +18,75 @@ interface PetCardProps {
 
 const PetCard: React.FC<PetCardProps> = ({ pet }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleCardClick = () => {
     navigate(`/${pet.id}`);
   };
+
+  function calculateAge(dateOfBirth: Date) {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
 
   return (
     <Card
       onClick={handleCardClick}
       sx={{
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
-        padding: 2,
+        alignItems: "center",
+        padding: theme.spacing(2),
         cursor: "pointer",
-        transition: "transform 0.3s",
-        "&:hover": { 
+        transition: "transform 0.3s, background-color 0.3s",
+        borderRadius: 4,
+        maxWidth: 900,
+        margin: `auto`,
+        boxShadow: 3,
+        "&:hover": {
           transform: "scale(1.05)",
-          backgroundColor: "primary.main",
+          backgroundColor: theme.palette.primary.light,
+          boxShadow: theme.shadows[6],
         },
-        width: "90%",
-        maxWidth: "900px", 
-        mx: "auto",
-        height: 110,
-        borderRadius: "20px",
       }}
     >
+      {/* Image and Details Section */}
       <Box display="flex" alignItems="center">
-        <PetsIcon
-          fontSize="large"
-          sx={{ fontSize: 60, margin: 2 }}
+        <Box
+          component="img"
+          src={pet.image || petPicture}
+          sx={{
+            width: 80,
+            height: 80,
+            borderRadius: "50%",
+            margin: 1,
+            objectFit: "cover",
+          }}
         />
 
-        <CardContent>
-          <Box display={"flex"} alignItems="center">
-            <Typography variant="body1" fontWeight="bold" mt={1}>
-              {pet.name}
-            </Typography>
-            <Box
-              display={"flex"}
-              alignItems="center"
-              color={"text.secondary"}
-              ml={2}
-              mt={5}
-            >
-              <Typography variant="body2">
-                {pet.gender ? "Male" : "Female"}, {pet.breed}, {pet.age} years, {pet.weight} kg
-              </Typography>
-            </Box>
-          </Box>
+        <CardContent sx={{ padding: 0 }}>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>
+            {pet.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {`${pet.type}, ${pet.breed}, ${pet.isMale ? "Male" : "Female"}, ${calculateAge(pet.dateOfBirth)} years, ${pet.weight} kg`}
+          </Typography>
         </CardContent>
       </Box>
-      <Box display={"flex"} alignItems="center" color={"text.secondary"}>
-        <Typography variant="body2" fontWeight="bold" mr={2}>
+
+      {/* Action Section */}
+      <Box display="flex" alignItems="center">
+        <Typography variant="body2" fontWeight="bold" mr={1}>
           View Profile
         </Typography>
-        <IconButton>
-          <ArrowForwardIcon fontSize="large" />
+        <IconButton size="large">
+          <ArrowForwardIcon fontSize="inherit" />
         </IconButton>
       </Box>
     </Card>
