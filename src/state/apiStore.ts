@@ -15,21 +15,23 @@ type ApiStore = {
   login: (email: string, password: string) => Promise<AxiosResponse>;
   addPet: (petData: {
     name: string;
-    gender: boolean;
-    age: number;
+    isMale: boolean;
+    dateOfBirth: Date;
     breed: string;
     weight: number;
-    image: string;
+    image: string | null;
+    type: string;
   }) => Promise<AxiosResponse>;
   updatePet: (
     id: number,
     petData: {
       name: string;
-      gender: boolean;
-      age: number;
+      isMale: boolean;
+      dateOfBirth: Date;
       breed: string;
       weight: number;
-      image: string;
+      image: string | null;
+      type: string;
     }
   ) => Promise<AxiosResponse>;
   getAllPetsByUserId: () => Promise<AxiosResponse>;

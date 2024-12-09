@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Tooltip } from "@mui/material";
+import { Box, Fab, Grid, Tooltip } from "@mui/material";
 import { useApiStore } from "../state/apiStore";
 import { Pet } from "../models/Pet";
 import PetCard from "../components/pets-page/PetCard";
@@ -29,6 +29,9 @@ const PetsPage: React.FC = () => {
                 "error"
               );
             }
+            break;
+
+          case 204:
             break;
 
           case 400:
@@ -82,19 +85,18 @@ const PetsPage: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: 4,
-        position: "relative", 
+        position: "relative",
       }}
     >
       <Tooltip title="Add New Animal">
-        <AddIcon
+        <Fab
+          color="primary"
           onClick={handleAddClick}
-          fontSize="large"
           sx={{
-            position: "absolute",
-            top: 20,
-            right: 20,
-            color: "black",
+            position: "fixed",
+            bottom: "2em",
+            right: "2em",
+            color: "white",
             padding: 1,
             borderRadius: "50%",
             cursor: "pointer",
@@ -104,7 +106,9 @@ const PetsPage: React.FC = () => {
               boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.3)",
             },
           }}
-        />
+        >
+          <AddIcon fontSize="large" />
+        </Fab>
       </Tooltip>
 
       <Grid container spacing={4} mt={3}>

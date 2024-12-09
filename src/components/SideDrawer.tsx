@@ -12,6 +12,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import LogoutIcon from "@mui/icons-material/Logout";
 import pawpalLogo from "../assets/pawpal-logo.png";
 import { Box } from "@mui/material";
+import { useSnackBarStore } from "../state/snackBarStore";
 
 const drawerItems = [
   {
@@ -43,6 +44,8 @@ type SideDrawerProps = {
 function SideDrawer({ drawerWidth }: SideDrawerProps) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { openAlert } = useSnackBarStore();
 
   return (
     <Drawer
@@ -89,7 +92,13 @@ function SideDrawer({ drawerWidth }: SideDrawerProps) {
       <Box sx={{ margin: "auto 0 0.5em 0", padding: "1em" }}>
         <ListItem>
           <ListItemButton
-            onClick={() => navigate("/logout")}
+            onClick={() => {
+              localStorage.removeItem("jwtToken");
+              localStorage.removeItem("userFirstName");
+              localStorage.removeItem("userLastName");
+              navigate("/login");
+              openAlert("You have been logged out.");
+            }}
             sx={{
               borderRadius: "15px",
             }}

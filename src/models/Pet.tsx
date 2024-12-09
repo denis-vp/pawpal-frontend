@@ -7,7 +7,7 @@ export interface Pet {
     isMale: boolean;
     dateOfBirth: Date;
     breed: string;
-    weight: string;
+    weight: number;
     type: AnimalType;
   }
   

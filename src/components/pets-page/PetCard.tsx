@@ -6,11 +6,13 @@ import {
   IconButton,
   Box,
   useTheme,
+  CardMedia,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { Pet } from "../../models/Pet";
-import petPicture from "../../assets/pet-picture.jpg";
+import PetsIcon from "@mui/icons-material/Pets";
+import { addDataUrlPrefix } from "../../utils/imageUtils";
 
 interface PetCardProps {
   pet: Pet;
@@ -29,11 +31,16 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
     const birthDate = new Date(dateOfBirth);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
     return age;
   }
+
+  const petImage = pet.image ? addDataUrlPrefix(pet.image, "png") : null;
 
   return (
     <Card
@@ -57,20 +64,24 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
       }}
     >
       {/* Image and Details Section */}
-      <Box display="flex" alignItems="center">
-        <Box
-          component="img"
-          src={pet.image || petPicture}
-          sx={{
-            width: 80,
-            height: 80,
-            borderRadius: "50%",
-            margin: 1,
-            objectFit: "cover",
-          }}
-        />
+      <Box sx={{ display: "flex", alignItems: "center", gap: "1em" }}>
+        {petImage ? (
+          <CardMedia
+            component="img"
+            image={petImage}
+            alt={`${pet.name}'s picture`}
+            sx={{
+              width: "6em",
+              height: "6em",
+              borderRadius: "50%",
+              objectFit: "cover ",
+            }}
+          />
+        ) : (
+          <PetsIcon sx={{ fontSize: "6em" }} />
+        )}
 
-        <CardContent sx={{ padding: 0 }}>
+        <CardContent>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             {pet.name}
           </Typography>

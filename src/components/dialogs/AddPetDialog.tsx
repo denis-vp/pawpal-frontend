@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -35,7 +35,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
 }) => {
   const { addPet } = useApiStore();
   const [name, setName] = React.useState("");
-  const [gender, setGender] = React.useState(false); // false for female, true for male
+  const [isMale, setIsMale] = React.useState(false);
   const [dateOfBirth, setDateOfBirth] = React.useState<Date | null>(null);
   const [breed, setBreed] = React.useState("");
   const [weight, setWeight] = React.useState("");
@@ -44,17 +44,39 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   const [type, setAnimalType] = React.useState<AnimalType | "">("");
   const { openAlert } = useSnackBarStore();
 
+  // Reset form fields when dialog is closed
+  useEffect(() => {
+    if (!open) {
+      setName("");
+      setIsMale(false);
+      setDateOfBirth(null);
+      setBreed("");
+      setWeight("");
+      setImage(null);
+      setImageName(null);
+      setAnimalType("");
+    }
+  }, [open]);
+
   const handleAddClick = () => {
-    if (!image) {
-      openAlert("Please upload an image of the pet.", "error");
+    if (!name || !dateOfBirth || !breed || !weight || !type) {
+      openAlert("Please fill all the fields.", "error");
       return;
     }
 
     const parsedWeight = parseInt(weight, 10);
 
-    addPet({ name, gender, dateOfBirth, breed, weight: parsedWeight, image, type })
+    addPet({
+      name,
+      isMale: isMale,
+      dateOfBirth,
+      breed,
+      weight: parsedWeight,
+      image,
+      type,
+    })
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           onAddPet(response.data);
           onClose();
         } else {
@@ -110,10 +132,14 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
-        <Typography variant="body1">Add New Animal</Typography>
+        <Typography
+          variant="body1"
+          sx={{ justifySelf: "center", fontWeight: "bold" }}
+        >
+          Add New Animal
+        </Typography>
       </DialogTitle>
       <DialogContent>
-        
         <Box display="flex" alignItems="center" my={2}>
           <Button
             component="label"
@@ -124,15 +150,11 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
             <VisuallyHiddenInput type="file" onChange={handleFileChange} />
           </Button>
           {imageName && (
-            <Typography
-              variant="body2"
-              sx={{ ml: 2 }}
-            >
+            <Typography variant="body2" sx={{ ml: 2 }}>
               {imageName}
             </Typography>
           )}
         </Box>
-
         <TextField
           margin="dense"
           label="Name"
@@ -147,37 +169,36 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
         <Box display="flex" alignItems="center" my={2}>
           <Typography
             variant="body2"
-            sx={{ marginRight: 4 }}
+            sx={{ marginRight: 4, fontWeight: "bold" }}
           >
             Gender
           </Typography>
           <Typography
             variant="body2"
             color="secondary.dark"
-            sx={{ fontWeight: "bold", marginRight: 1 }}
+            sx={{ marginRight: 1, color: isMale ? "#529ff7" : "#add3ff" }}
           >
             Male
           </Typography>
           <Switch
-            checked={!gender}
-            onChange={(e) => setGender(!e.target.checked)}
+            checked={!isMale}
+            onChange={(e) => setIsMale(!e.target.checked)}
             sx={{
               "& .MuiSwitch-thumb": {
-                backgroundColor: gender ? "#529ff7" : "#fb6f92",
+                backgroundColor: isMale ? "#529ff7" : "#fb6f92",
               },
               "& .MuiSwitch-track": {
-                backgroundColor: gender ? "#add3ff" : "#fcd9fa",
+                backgroundColor: isMale ? "#add3ff" : "#fcd9fa",
               },
             }}
           />
           <Typography
             variant="body2"
-            sx={{ fontWeight: "bold", marginLeft: 1 }}
+            sx={{ marginLeft: 1, color: isMale ? "#fb6f92" : "#fcd9fa" }}
           >
             Female
           </Typography>
         </Box>
-
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
@@ -209,7 +230,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
         <TextField
           margin="dense"
           label="Weight"
-          type="text"
+          type="number"
           fullWidth
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
@@ -218,8 +239,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
         />
 
         <FormControl fullWidth margin="dense">
-          {!type && (
-            <InputLabel id="animal-type-label">Animal Type</InputLabel>)}
+          {!type && <InputLabel id="animal-type-label">Animal Type</InputLabel>}
           <Select
             labelId="animal-type-label"
             value={type}
@@ -233,7 +253,6 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
             ))}
           </Select>
         </FormControl>
-
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
