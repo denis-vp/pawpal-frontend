@@ -48,7 +48,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   useEffect(() => {
     if (!open) {
       setName("");
-      setIsMale(false);
+      setIsMale(true);
       setDateOfBirth(null);
       setBreed("");
       setWeight("");
@@ -65,7 +65,6 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
     }
 
     const parsedWeight = parseInt(weight, 10);
-
     addPet({
       name,
       isMale: isMale,
@@ -155,6 +154,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
             </Typography>
           )}
         </Box>
+
         <TextField
           margin="dense"
           label="Name"
@@ -182,7 +182,11 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           </Typography>
           <Switch
             checked={!isMale}
-            onChange={(e) => setIsMale(!e.target.checked)}
+            onChange={(e) => {
+              const newState = !e.target.checked;
+              console.log("isMale updated:", newState); 
+              setIsMale(newState);
+            }}
             sx={{
               "& .MuiSwitch-thumb": {
                 backgroundColor: isMale ? "#529ff7" : "#fb6f92",

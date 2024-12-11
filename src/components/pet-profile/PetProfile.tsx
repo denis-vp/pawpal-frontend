@@ -9,14 +9,14 @@ import DocumentCard from "./DocumentCard";
 import MedicalLogCard from "./MedicalLogCard";
 import VaccineLogCard from "./VaccineLogCard";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useSnackBarStore } from "../../state/snackBarStore";
 
 const PetProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [petDetails, setPetDetails] = useState<Pet | null>(null);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const { getPetById } = useApiStore();
+  const { openAlert } = useSnackBarStore();
 
   const medicalLogs = [
     {
@@ -78,23 +78,22 @@ const PetProfile: React.FC = () => {
           switch (response.status) {
             case 200:
               setPetDetails(response.data);
-              setErrorMessage(null);
               break;
             case 400:
-              setErrorMessage("Invalid pet ID provided. Please try again.");
+              openAlert("Invalid pet ID provided. Please try again.", "error");
               break;
             case 404:
-              setErrorMessage("Pet with the specified ID not found.");
+              openAlert("Pet with the specified ID not found.", "error");
               break;
             case 500:
-              setErrorMessage("Server encountered an error. Please try again later.");
+              openAlert("Server encountered an error. Please try again later.", "error");
               break;
             default:
-              setErrorMessage("An unexpected error occurred. Please try again.");
+              openAlert("An unexpected error occurred. Please try again.", "error");
           }
         }
       } catch (error) {
-        setErrorMessage("Network error or server is unreachable.");
+        openAlert("Network error or server is unreachable.", "error");
         console.error("Error fetching pet:", error);
       } finally {
         setLoading(false);
@@ -108,10 +107,6 @@ const PetProfile: React.FC = () => {
     return <CircularProgress />;
   }
 
-  if (errorMessage) {
-    return <Typography variant="h6" color="error">{errorMessage}</Typography>;
-  }
-
   return petDetails ? (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -119,10 +114,7 @@ const PetProfile: React.FC = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "100vh",
-          marginTop: "100px",
           alignItems: "center",
-          marginLeft: "15rem",
         }}
       >
         <Box

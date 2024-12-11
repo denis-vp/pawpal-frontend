@@ -28,23 +28,6 @@ const theme = createTheme({
   shape: { borderRadius: 8 },
   
   components: {
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          '&:focus': {
-            outline: 'none',
-          },
-          '&:hover': {
-            transform: 'scale(1.05)',
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.5)',
-          },
-        },
-      },
-      defaultProps: {
-        size: 'small',
-      },
-    },
     MuiButton: {
       styleOverrides: {
         root: {
