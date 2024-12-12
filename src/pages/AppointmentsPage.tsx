@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Box, Fab, Grid, Tooltip } from "@mui/material";
 import { useApiStore } from "../state/apiStore";
-import { Pet } from "../models/Pet";
-import PetCard from "../components/cards/PetCard";
-import AddPetDialog from "../components/dialogs/AddPetDialog";
+import { VeterinaryAppointment } from "../models/VeterinaryAppointment";
 import { useSnackBarStore } from "../state/snackBarStore";
 import AddIcon from "@mui/icons-material/Add";
+import AppointmentCard from "../components/cards/AppointmentCard";
+import AddAppointmentDialog from "../components/dialogs/AddAppointmentDialog";
 
-const PetsPage: React.FC = () => {
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [addPetDialogOpen, setAddPetDialogOpen] = useState(false);
+const AppointmentsPage: React.FC = () => {
+  const [appointments, setAppointments] = useState<VeterinaryAppointment[]>([]);
+  const [addAppointmentDialogOpen, setAddAppointmentDialogOpen] = useState(false);
 
-  const { getAllPetsByUserId, getPetById } = useApiStore();
+  const { getAllAppointments, getAppointmentById } = useApiStore();
   const { openAlert } = useSnackBarStore();
 
   useEffect(() => {
-    const fetchPets = async () => {
+    const fetchAppointments = async () => {
       try {
-        const response = await getAllPetsByUserId();
+        const response = await getAllAppointments();
 
         switch (response.status) {
           case 200:
             if (Array.isArray(response.data)) {
-              setPets(response.data);
+              setAppointments(response.data);
             } else {
-              openAlert(
-                "Unexpected data format received from server.",
-                "error"
-              );
+              openAlert("Unexpected data format received from server.", "error");
             }
             break;
 
@@ -39,21 +36,15 @@ const PetsPage: React.FC = () => {
             break;
 
           case 404:
-            openAlert("No pets found for the specified user ID.", "error");
+            openAlert("No appointments found for the specified user ID.", "error");
             break;
 
           case 500:
-            openAlert(
-              "Server encountered an error. Please try again later.",
-              "error"
-            );
+            openAlert("Server encountered an error. Please try again later.", "error");
             break;
 
           default:
-            openAlert(
-              "An unexpected error occurred. Please try again.",
-              "error"
-            );
+            openAlert("An unexpected error occurred. Please try again.", "error");
             break;
         }
       } catch (error) {
@@ -61,21 +52,21 @@ const PetsPage: React.FC = () => {
       }
     };
 
-    fetchPets();
-  }, [getAllPetsByUserId]);
+    fetchAppointments();
+  }, [getAllAppointments]);
 
-  const handleAddClick = () => setAddPetDialogOpen(true);
-  const handleCloseDialog = () => setAddPetDialogOpen(false);
+  const handleAddClick = () => setAddAppointmentDialogOpen(true);
+  const handleCloseDialog = () => setAddAppointmentDialogOpen(false);
 
-  const handleAddPet = (petId: number) => {
-    getPetById(petId).then((response) => {
+  const handleAddAppointment = (appointmentId: number) => {
+    getAppointmentById(appointmentId).then((response) => {
       if (response.status === 200) {
-        setPets((prevPets) => [...prevPets, response.data]);
+        setAppointments((prevAppointments) => [...prevAppointments, response.data]);
       } else {
         openAlert("Unexpected response status. Please try again.", "error");
       }
     });
-    setAddPetDialogOpen(false);
+    setAddAppointmentDialogOpen(false);
   };
 
   return (
@@ -88,7 +79,7 @@ const PetsPage: React.FC = () => {
         position: "relative",
       }}
     >
-      <Tooltip title="Add New Animal">
+      <Tooltip title="Add New Appointment">
         <Fab
           color="primary"
           onClick={handleAddClick}
@@ -112,20 +103,18 @@ const PetsPage: React.FC = () => {
       </Tooltip>
 
       <Grid container spacing={4} mt={3}>
-        {pets.map((pet) => (
-          <Grid item xs={12} key={pet.id}>
-            <PetCard pet={pet} />
+        {appointments.map((appointment) => (
+          <Grid item xs={12} key={appointment.id}>
+            <AppointmentCard appointment={appointment} />
           </Grid>
         ))}
       </Grid>
 
-      <AddPetDialog
-        open={addPetDialogOpen}
-        onClose={handleCloseDialog}
-        onAddPet={handleAddPet}
-      />
+      <AddAppointmentDialog
+              open={addAppointmentDialogOpen}
+              onClose={handleCloseDialog} onSubmit={ handleAddAppointment }/>
     </Box>
   );
 };
 
-export default PetsPage;
+export default AppointmentsPage;

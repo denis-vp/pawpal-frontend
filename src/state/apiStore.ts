@@ -37,7 +37,6 @@ type ApiStore = {
   getAllPetsByUserId: () => Promise<AxiosResponse>;
   getPetById: (petId: number) => Promise<AxiosResponse>;
   addVeterinaryAppointment: (appointment: {
-    id: number;
     userId: number;
     petId: number;
     status: AppointmentStatus;
@@ -45,6 +44,8 @@ type ApiStore = {
     duration: number;
     cost: number;
   }) => Promise<AxiosResponse>;
+  getAllAppointments: () => Promise<AxiosResponse>;
+  getAppointmentById: (appointmentId: number) => Promise<AxiosResponse>;
 };
 
 export const useApiStore = create<ApiStore>((set, get) => {
@@ -102,7 +103,7 @@ export const useApiStore = create<ApiStore>((set, get) => {
     },
     updatePet: async (id, petData) => {
       try {
-        return await axiosInstance.post(`/${id}`, petData);
+        return await axiosInstance.put(`/pets/${id}`, petData);
       } catch (error) {
         return Promise.reject(error);
       }
@@ -134,5 +135,22 @@ export const useApiStore = create<ApiStore>((set, get) => {
         return Promise.reject(error);
       }
     },
+    
+      getAllAppointments: async () => {
+        try {
+          const response = await axios.get(`/api/veterinary-appointments/all`);
+          return response;
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      },
+      getAppointmentById: async (appointmentId: number) => {
+        try {
+          const response = await axiosInstance.get(`/api/veterinary-appointments/${appointmentId}`);
+          return response;
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      },
   };
 });
