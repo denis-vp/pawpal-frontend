@@ -9,5 +9,6 @@ export interface Pet {
     breed: string;
     weight: number;
     type: AnimalType;
+    imageType: string;
   }
   

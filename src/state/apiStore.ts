@@ -20,6 +20,7 @@ type ApiStore = {
     breed: string;
     weight: number;
     image: string | null;
+    imageType: string | null;
     type: string;
   }) => Promise<AxiosResponse>;
   updatePet: (
@@ -31,6 +32,7 @@ type ApiStore = {
       breed: string;
       weight: number;
       image: string | null;
+      imageType: string | null;
       type: string;
     }
   ) => Promise<AxiosResponse>;
@@ -102,7 +104,7 @@ export const useApiStore = create<ApiStore>((set, get) => {
     },
     updatePet: async (id, petData) => {
       try {
-        return await axiosInstance.post(`/${id}`, petData);
+        return await axiosInstance.put(`/pets/${id}`, petData);
       } catch (error) {
         return Promise.reject(error);
       }

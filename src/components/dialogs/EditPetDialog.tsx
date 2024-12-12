@@ -64,7 +64,8 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
     const parsedWeight = parseInt(weight);
     const date = new Date(dateOfBirth);
     if (pet) {
-      updatePet(pet.id, { name, isMale:isMale, dateOfBirth: date, breed, weight: parsedWeight, image, type })
+      const imageType = image.split(";")[0].split(":")[1];
+      updatePet(pet.id, { name, isMale:isMale, dateOfBirth: date, breed, weight: parsedWeight, image, imageType, type })
         .then((response) => {
           if (response.status === 200) {
             onUpdatePet(response.data);

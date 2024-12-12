@@ -40,7 +40,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
     return age;
   }
 
-  const petImage = pet.image ? addDataUrlPrefix(pet.image, "png") : null;
+  const petImage = pet.image ? addDataUrlPrefix(pet.image, pet.imageType) : null;
 
   return (
     <Card

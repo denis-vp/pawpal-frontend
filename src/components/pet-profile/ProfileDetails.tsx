@@ -26,7 +26,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
     setEditPetDialogOpen(false);
   };
 
-  const petImage = petDetails.image ? addDataUrlPrefix(petDetails.image, "png") : null;
+  const petImage = petDetails.image ? addDataUrlPrefix(petDetails.image, petDetails.imageType) : null;
 
   function calculateAge(dateOfBirth: Date) {
     const birthDate = new Date(dateOfBirth);
