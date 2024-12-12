@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Box, Typography, IconButton } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Grid, Box, Typography, IconButton, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
 import AddVaccineLogDialog from "../dialogs/AddVaccineLogDialog";
@@ -64,9 +63,11 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
         <Typography variant="h2" sx={{ fontWeight: "bold" }}>
           {title}
         </Typography>
+        <Tooltip title="Add Vaccine Log" arrow>
         <IconButton onClick={handleAddClick}>
           <AddIcon fontSize="large" />
         </IconButton>
+        </Tooltip>
       </Box>
 
       {logs.map((log, index) => (
@@ -78,13 +79,18 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
           sx={{
             mt: 2,
             p: 2,
-            border: "1px solid #dce5dc",
+            border: "2px solid",
             borderRadius: 1,
-            backgroundColor: "secondary.light",
+            transition: "border-color 0.3s, box-shadow 0.3s",
+            "&:hover": {
+              borderColor: "primary.dark",
+              boxShadow: "0 4px 8px ",
+            },
           }}
+          onClick={() => handleArrowClick(log)}
         >
           <Box display="flex" alignItems="center" gap={2}>
-            <VaccinesIcon sx={{ color: "primary.main", fontSize: 40 }} />
+            <VaccinesIcon sx={{ fontSize: 40 }} />
             <Box>
               <Typography variant="body2" fontWeight="medium">
                 Date: {log.date}
@@ -94,14 +100,14 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
               </Typography>
             </Box>
           </Box>
-          <Box>
-            <IconButton onClick={() => handleDeleteClick(log)}>
-              <DeleteIcon fontSize="large" />
-            </IconButton>
-            <IconButton onClick={() => handleArrowClick(log)}>
-              <ArrowForwardIcon fontSize="large" />
-            </IconButton>
-          </Box>
+          <Tooltip title="Delete Vaccine Log" arrow>
+          <IconButton onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteClick(log);
+          }}>
+            <DeleteIcon fontSize="large" />
+          </IconButton>
+          </Tooltip>
         </Box>
       ))}
 

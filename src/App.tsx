@@ -8,6 +8,7 @@ import AlertSnackBar from "./components/AlertSnackBar";
 import { useSnackBarStore } from "./state/snackBarStore";
 import Layout from "./components/Layout";
 import PetsPage from "./pages/PetsPage";
+import PetProfile from "./components/pet-profile/PetProfile";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/notifications",
     element: <Layout children={<></>} />,
+  },
+  {
+    path: "/:id",
+    element: <Layout children={<PetProfile />} />,
   },
 ]);
 

@@ -9,25 +9,26 @@ import {
   Typography,
   Box,
   Switch,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  styled,
 } from "@mui/material";
 import { useApiStore } from "../../state/apiStore";
 import { useSnackBarStore } from "../../state/snackBarStore";
+import { Pet } from "../../models/Pet";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { AnimalType } from "../../models/AnimalType";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 interface EditPetDialogProps {
   open: boolean;
   onClose: () => void;
   pet: Pet | null;
   onUpdatePet: (updatePet: Pet) => void;
-}
-
-export interface Pet {
-  id: number;
-  name: string;
-  image: string;
-  gender: boolean;
-  age: string;
-  breed: string;
-  weight: string;
 }
 
 const EditPetDialog: React.FC<EditPetDialogProps> = ({
@@ -38,29 +39,32 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
 }) => {
   const { updatePet } = useApiStore();
   const [name, setName] = useState("");
-  const [gender, setGender] = useState(false);
-  const [age, setAge] = useState("");
+  const [isMale, setIsMale] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState<string>("");
   const [breed, setBreed] = useState("");
   const [weight, setWeight] = useState("");
   const [image, setImage] = useState("");
+  const [imageName, setImageName] = useState<string | null>(null);
+  const [type, setAnimalType] = useState<string>("");
   const { openAlert } = useSnackBarStore();
 
   useEffect(() => {
     if (pet) {
       setName(pet.name);
       setImage(pet.image);
-      setGender(pet.gender);
-      setAge(pet.age);
+      setIsMale(pet.isMale);
+      setDateOfBirth(pet.dateOfBirth.toString());
       setBreed(pet.breed);
-      setWeight(pet.weight);
+      setWeight(pet.weight.toString());
+      setAnimalType(pet.type);
     }
   }, [pet]);
 
   const handleUpdateClick = () => {
-    const parsedAge = parseInt(age);
-    const parsedWeight = parseInt(weight)
+    const parsedWeight = parseInt(weight);
+    const date = new Date(dateOfBirth);
     if (pet) {
-      updatePet(pet.id, { name, isMale: gender, dateOfBirth: parsedAge, breed, weight: parsedWeight, image })
+      updatePet(pet.id, { name, isMale:isMale, dateOfBirth: date, breed, weight: parsedWeight, image, type })
         .then((response) => {
           if (response.status === 200) {
             onUpdatePet(response.data);
@@ -95,15 +99,53 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
     }
   };
 
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
-  if (!pet) return null;
+  const handleFileUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageName(file.name);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
-        <Typography variant="body1">Edit Pet</Typography>
+        <Typography variant="body1" sx={{ justifySelf: "center", fontWeight: "bold" }}>Edit Animal</Typography>
       </DialogTitle>
       <DialogContent>
+        <Box display="flex" alignItems="center" my={2}>
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+          >
+            Upload New Image
+            <VisuallyHiddenInput type="file" onChange={handleFileUpdate} />
+          </Button>
+          {imageName && (
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              {imageName}
+            </Typography>
+          )}
+        </Box>
+
         <TextField
           margin="dense"
           label="Name"
@@ -115,48 +157,63 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
           InputProps={{ sx: { typography: "body2" } }}
         />
 
-        <TextField
-          margin="dense"
-          label="Image URL"
-          type="text"
-          fullWidth
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
-          InputProps={{ sx: { typography: "body2" } }}
-        />
-
         <Box display="flex" alignItems="center" my={2}>
-          <Typography variant="body2" color="secondary.dark" sx={{ fontWeight: "bold", mr: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{ marginRight: 4, fontWeight: "bold" }}
+          >
+            Gender
+          </Typography>
+          <Typography
+            variant="body2"
+            color="secondary.dark"
+            sx={{ marginRight: 1, color: isMale ? "#529ff7" : "#add3ff" }}
+          >
             Male
           </Typography>
           <Switch
-            checked={!gender} 
-            onChange={(e) => setGender(!e.target.checked)}
+            checked={!isMale}
+            onChange={(e) => {
+              const newState = !e.target.checked;
+              console.log("isMale updated:", newState); 
+              setIsMale(newState);
+            }}
             sx={{
               "& .MuiSwitch-thumb": {
-                backgroundColor: gender ? "#529ff7" : "#fb6f92",
+                backgroundColor: isMale ? "#529ff7" : "#fb6f92",
               },
               "& .MuiSwitch-track": {
-                backgroundColor: gender ? "#add3ff" : "#fcd9fa",
+                backgroundColor: isMale ? "#add3ff" : "#fcd9fa",
               },
             }}
           />
-          <Typography variant="body2" color="#fb6f92" sx={{ fontWeight: "bold", ml: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{ marginLeft: 1, color: isMale ? "#fb6f92" : "#fcd9fa" }}
+          >
             Female
           </Typography>
         </Box>
 
-        <TextField
-          margin="dense"
-          label="Age"
-          type="text"
-          fullWidth
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
-          InputProps={{ sx: { typography: "body2" } }}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Date of Birth"
+            value={dayjs(dateOfBirth)}
+            onChange={(newDate) => {
+              if (newDate) {
+                setDateOfBirth(newDate.toString()); 
+              }
+            }}
+            slotProps={{
+              textField: {
+                margin: "dense",
+                fullWidth: true,
+                InputProps: { sx: { typography: "body2" } },
+                InputLabelProps: { sx: { typography: "body2" } },
+              },
+            }}
+          />
+        </LocalizationProvider>
 
         <TextField
           margin="dense"
@@ -179,6 +236,22 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
           InputLabelProps={{ shrink: true, sx: { typography: "body2" } }}
           InputProps={{ sx: { typography: "body2" } }}
         />
+
+        <FormControl fullWidth margin="dense">
+          {!type && <InputLabel id="animal-type-label">Animal Type</InputLabel>}
+          <Select
+            labelId="animal-type-label"
+            value={type}
+            onChange={(e) => setAnimalType(e.target.value as AnimalType)}
+            fullWidth
+          >
+            {Object.values(AnimalType).map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} sx={{ typography: "body2" }}>

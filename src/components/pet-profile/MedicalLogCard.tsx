@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Box, Typography, IconButton } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Grid, Box, Typography, IconButton, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import AddMedicalLogDialog from "../dialogs/AddMedicalLogDialog";
@@ -74,9 +73,11 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
         <Typography variant="h2" sx={{ fontWeight: "bold" }}>
           {title}
         </Typography>
+        <Tooltip title="Add Medical Log" arrow>
         <IconButton onClick={handleAddClick}>
           <AddIcon fontSize="large" />
         </IconButton>
+        </Tooltip>
       </Box>
 
       {logs.map((log) => (
@@ -88,14 +89,19 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
           sx={{
             mt: 2,
             p: 2,
-            border: "1px solid #dce5dc",
+            border: "2px solid",
             borderRadius: 1,
-            backgroundColor: "secondary.light",
+            transition: "border-color 0.3s, box-shadow 0.3s",
+            "&:hover": {
+              borderColor: "primary.dark", 
+              boxShadow: "0 4px 8px ", 
+            },
           }}
+          onClick={() => handleArrowClick(log)}
         >
           <Box display="flex" alignItems="center" gap={2}>
             <MedicalInformationIcon
-              sx={{ color: "primary.main", fontSize: 40 }}
+              sx={{fontSize: 40 }}
             />
             <Box>
               <Typography variant="body2" fontWeight="medium">
@@ -106,14 +112,14 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
               </Typography>
             </Box>
           </Box>
-          <Box>
-            <IconButton onClick={() => handleDeleteClick(log)}>
-              <DeleteIcon fontSize="large" />
-            </IconButton>
-            <IconButton onClick={() => handleArrowClick(log)}>
-              <ArrowForwardIcon fontSize="large" />
-            </IconButton>
-          </Box>
+          <Tooltip title="Delete Medical Log" arrow>
+          <IconButton onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteClick(log);
+          }}>
+            <DeleteIcon fontSize="large" />
+          </IconButton>
+          </Tooltip>
         </Box>
       ))}
 
