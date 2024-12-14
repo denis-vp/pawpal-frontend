@@ -15,6 +15,7 @@ type ApiStore = {
   ) => Promise<AxiosResponse>;
   login: (email: string, password: string) => Promise<AxiosResponse>;
   getDetails: () => Promise<AxiosResponse>;
+  updateUserImage: (image: string, imageType: string) => Promise<AxiosResponse>;
 
   // Pet related API calls
   addPet: (petData: {
@@ -105,6 +106,12 @@ export const useApiStore = create<ApiStore>((set, get) => {
     },
     getDetails: async () => {
       return await axiosInstance.get("/users/details");
+    },
+    updateUserImage: async (image: string, imageType: string) => {
+      return await axiosInstance.put("/users/update-image", {
+        image,
+        imageType,
+      });
     },
 
     // Pet related API calls

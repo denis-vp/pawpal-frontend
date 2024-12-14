@@ -21,7 +21,7 @@ interface UserProfile {
 }
 
 const ProfilePage: React.FC = () => {
-  const { getDetails } = useApiStore();
+  const { getDetails, updateUserImage } = useApiStore();
   const { openAlert } = useSnackBarStore();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,59 +68,115 @@ const ProfilePage: React.FC = () => {
     console.log("Change password clicked");
   };
 
+  const handleImageClick = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (event: any) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64String = reader.result as string;
+          const imageType = "png"; // Set imageType to just "png"
+          console.log("Image type:", imageType);
+          console.log("Base64 string:", base64String);
+          try {
+            const response = await updateUserImage(base64String, imageType);
+            if (response.status === 200) {
+              openAlert("Image updated successfully.", "success");
+              setUser((prevUser) => prevUser ? { ...prevUser, photo: base64String } : null);
+            } else {
+              openAlert("Failed to update image. Please try again.", "error");
+            }
+          } catch (error) {
+            openAlert("Failed to update image. Please try again.", "error");
+            console.error("Error updating user image:", error);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
+
   if (loading) {
+    return <CircularProgress />;
   }
 
   return user ? (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        mt: 4,
-      }}
-    >
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Box
         sx={{
-          flex: 1,
-          p: 4,
           display: "flex",
-          justifyContent: "center",
-          marginTop: "40px",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 4,
+          p: 2,
         }}
       >
-        <Box sx={{ maxWidth: 1000, width: "100%" }}>
-          <Grid container spacing={4}>
-            <Grid
-              item
-              xs={12}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
+        <Grid container spacing={4} alignItems="center">
+          <Grid item xs={12} md={6} display="flex" justifyContent="center">
+            <Box
+              sx={{
+                width: "25em",
+                height: "25em",
+                padding: 2,
+                borderRadius: "50%",
+                backgroundColor: "primary.dark",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                transition: "transform 0.5s ease, box-shadow 0.5s ease",
+                "&:hover": {
+                  transform: "scale(1.1)",
+                  boxShadow: 8,
+                },
+              }}
+              onClick={handleImageClick}
             >
               <Avatar
                 src={user.photo}
                 alt={`${user.firstName} ${user.lastName}`}
-                sx={{ width: 100, height: 100 }}
+                sx={{ width: "100%", height: "100%", borderRadius: "50%" }}
               />
-              <Typography
-                variant="h5"
-                sx={{ mt: 2 }}
-              >{`${user.firstName} ${user.lastName}`}</Typography>
-              <Typography variant="body1">{user.email}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" color="textSecondary" sx={{ fontWeight: "bold" }}>
+                  First Name
+                </Typography>
+                <Typography variant="body1">{user.firstName}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h6" color="textSecondary" sx={{ fontWeight: "bold" }}>
+                  Last Name
+                </Typography>
+                <Typography variant="body1">{user.lastName}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary" sx={{ fontWeight: "bold" }}>
+                  Email
+                </Typography>
+                <Typography variant="body1">{user.email}</Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} display="flex" justifyContent="center" sx={{ mt: 4 }}>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleChangePassword}
-                sx={{ mt: 2 }}
               >
                 Change Password
               </Button>
             </Grid>
           </Grid>
-        </Box>
+        </Grid>
       </Box>
-    </Box>
+    </ThemeProvider>
   ) : (
     <Typography variant="h6">User not found</Typography>
   );
