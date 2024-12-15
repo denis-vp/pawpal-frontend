@@ -46,6 +46,7 @@ type ApiStore = {
   }) => Promise<AxiosResponse>;
   getAllAppointments: () => Promise<AxiosResponse>;
   getAppointmentById: (appointmentId: number) => Promise<AxiosResponse>;
+  deletePet: (petId: number) => Promise<void>;
 };
 
 export const useApiStore = create<ApiStore>((set, get) => {
@@ -124,6 +125,13 @@ export const useApiStore = create<ApiStore>((set, get) => {
         return Promise.reject(error);
       }
     },
+    deletePet: async (petId: number) : Promise<void> => {
+      try {
+        await axiosInstance.delete(`/pets/${petId}`);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
     addVeterinaryAppointment: async (appointment) => {
       try {
         const response = await axiosInstance.post(
@@ -138,7 +146,7 @@ export const useApiStore = create<ApiStore>((set, get) => {
     
       getAllAppointments: async () => {
         try {
-          const response = await axios.get(`/api/veterinary-appointments/all`);
+          const response = await axiosInstance.get(`/api/veterinary-appointments/all`);
           return response;
         } catch (error) {
           return Promise.reject(error);

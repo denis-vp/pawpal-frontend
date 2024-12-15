@@ -78,6 +78,10 @@ const PetsPage: React.FC = () => {
     setAddPetDialogOpen(false);
   };
 
+  const handlePetDelete = (petId: number) => {
+    setPets((prevPets) => prevPets.filter((pet) => pet.id !== petId));
+  };
+
   return (
     <Box
       sx={{
@@ -114,7 +118,7 @@ const PetsPage: React.FC = () => {
       <Grid container spacing={4} mt={3}>
         {pets.map((pet) => (
           <Grid item xs={12} key={pet.id}>
-            <PetCard pet={pet} />
+            <PetCard pet={pet} onPetDelete={handlePetDelete}/>
           </Grid>
         ))}
       </Grid>
