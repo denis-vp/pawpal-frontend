@@ -8,6 +8,11 @@ import {
   CssBaseline,
   Grid,
   ThemeProvider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
 import { useApiStore } from "../state/apiStore";
 import { useSnackBarStore } from "../state/snackBarStore";
@@ -21,10 +26,51 @@ interface UserProfile {
 }
 
 const ProfilePage: React.FC = () => {
-  const { getDetails, updateUserImage } = useApiStore();
+  const { getDetails, updateUserImage, resetUserPassword } = useApiStore();
   const { openAlert } = useSnackBarStore();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+
+  const handleChangePassword = async () => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      openAlert(
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
+        "error"
+      );
+      return;
+    };
+
+    resetUserPassword(newPassword)
+      .then((response) => {
+        switch (response.status) {
+          case 200:
+            openAlert("Password changed successfully.", "success");
+            break;
+          case 400:
+            openAlert("Invalid request. Please try again.", "error");
+            break;
+          case 500:
+            openAlert(
+              "Server encountered an error. Please try again later.",
+              "error"
+            );
+            break;
+          default:
+            openAlert(
+              "An unexpected error occurred. Please try again.",
+              "error"
+            );
+        }
+      })
+      .catch((error) => {
+        openAlert("Network error or server is unreachable.", "error");
+        console.error("Error changing password:", error);
+      });
+  };
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -63,11 +109,6 @@ const ProfilePage: React.FC = () => {
     fetchUserDetails();
   }, [getDetails, openAlert]);
 
-  const handleChangePassword = () => {
-    // Implement password change logic here
-    console.log("Change password clicked");
-  };
-
   const handleImageClick = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -85,7 +126,9 @@ const ProfilePage: React.FC = () => {
             const response = await updateUserImage(base64String, imageType);
             if (response.status === 200) {
               openAlert("Image updated successfully.", "success");
-              setUser((prevUser) => prevUser ? { ...prevUser, photo: base64String } : null);
+              setUser((prevUser) =>
+                prevUser ? { ...prevUser, photo: base64String } : null
+              );
             } else {
               openAlert("Failed to update image. Please try again.", "error");
             }
@@ -146,32 +189,82 @@ const ProfilePage: React.FC = () => {
           <Grid item xs={12} md={6}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Typography variant="h6" color="textSecondary" sx={{ fontWeight: "bold" }}>
+                <Typography
+                  variant="h6"
+                  color="textSecondary"
+                  sx={{ fontWeight: "bold" }}
+                >
                   First Name
                 </Typography>
                 <Typography variant="body1">{user.firstName}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="h6" color="textSecondary" sx={{ fontWeight: "bold" }}>
+                <Typography
+                  variant="h6"
+                  color="textSecondary"
+                  sx={{ fontWeight: "bold" }}
+                >
                   Last Name
                 </Typography>
                 <Typography variant="body1">{user.lastName}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="h6" color="textSecondary" sx={{ fontWeight: "bold" }}>
+                <Typography
+                  variant="h6"
+                  color="textSecondary"
+                  sx={{ fontWeight: "bold" }}
+                >
                   Email
                 </Typography>
                 <Typography variant="body1">{user.email}</Typography>
               </Grid>
             </Grid>
-            <Grid item xs={12} display="flex" justifyContent="center" sx={{ mt: 4 }}>
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              sx={{ mt: 4 }}
+            >
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleChangePassword}
+                onClick={() => setOpenPasswordDialog(true)}
               >
                 Change Password
               </Button>
+              {/* Change Password Dialog */}
+              <Dialog
+                open={openPasswordDialog}
+                onClose={() => setOpenPasswordDialog(false)}
+              >
+                <DialogTitle>Change Password</DialogTitle>
+                <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="New Password"
+                    type="password"
+                    fullWidth
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setOpenPasswordDialog(false);
+                      setNewPassword("");
+                    }}
+                    color="primary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={handleChangePassword} color="primary">
+                    Change
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Grid>
           </Grid>
         </Grid>
