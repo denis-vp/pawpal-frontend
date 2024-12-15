@@ -58,15 +58,15 @@ const AppointmentsPage: React.FC = () => {
   const handleAddClick = () => setAddAppointmentDialogOpen(true);
   const handleCloseDialog = () => setAddAppointmentDialogOpen(false);
 
-  const handleAddAppointment = (appointmentId: number) => {
-    getAppointmentById(appointmentId).then((response) => {
-      if (response.status === 200) {
-        setAppointments((prevAppointments) => [...prevAppointments, response.data]);
-      } else {
-        openAlert("Unexpected response status. Please try again.", "error");
-      }
-    });
-    setAddAppointmentDialogOpen(false);
+  const handleAddAppointment = (appointment: VeterinaryAppointment) => {
+      setAppointments((prevAppointments) => [...prevAppointments, appointment]);
+      setAddAppointmentDialogOpen(false);
+  };
+
+  const handleDeleteAppointment = (appointmentId: number) => {
+    setAppointments((prevAppointments) =>
+      prevAppointments.filter((appointment) => appointment.id !== appointmentId)
+    );
   };
 
   return (
@@ -105,7 +105,7 @@ const AppointmentsPage: React.FC = () => {
       <Grid container spacing={4} mt={3}>
         {appointments.map((appointment) => (
           <Grid item xs={12} key={appointment.id}>
-            <AppointmentCard appointment={appointment} />
+            <AppointmentCard appointment={appointment} onDelete={handleDeleteAppointment}  />
           </Grid>
         ))}
       </Grid>

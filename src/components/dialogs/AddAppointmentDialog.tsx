@@ -16,6 +16,7 @@ import { AppointmentStatus } from "../../models/AppointmentStatus";
 import { useApiStore } from "../../state/apiStore";
 import { Pet } from "../../models/Pet";
 import { useSnackBarStore } from "../../state/snackBarStore";
+import { VeterinaryAppointment } from "../../models/VeterinaryAppointment";
 
 // Constants
 const APPOINTMENT_DURATION = 30;
@@ -24,7 +25,7 @@ const APPOINTMENT_BASE_COST = 25.0;
 interface AddAppointmentDialogProps {
   open: boolean; 
   onClose: () => void; 
-  onSubmit: (data: any) => void;
+  onSubmit: (appointment: VeterinaryAppointment) => void;
 }
 
 const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClose, onSubmit }) => {
@@ -96,12 +97,20 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
       alert("Please fill out all required fields.");
       return;
     }
+  
+    const selectedDateTime = new Date(selectedDate);
+    const [hours, minutes] = selectedTime.split(":").map(Number);
+    selectedDateTime.setHours(hours + 2, minutes, 0, 0);
+    const dateTimeString = selectedDateTime.toISOString();
 
-    const dateTimeString = `${selectedDate.toISOString().split("T")[0]}T${selectedTime}:00`;
-
+    const pet = pets.find((pet) => pet.id === selectedPet);
+    if (!pet) {
+      alert("Selected pet not found.");
+      return;
+    }
     const appointmentData = {
-      userId: 1, 
-      petId: pets[selectedPet - 1].id,
+      userId: 1, // Assuming userId is hardcoded
+      petId: pet.id,
       status: AppointmentStatus.SCHEDULED,
       localDateTime: dateTimeString,
       duration: APPOINTMENT_DURATION,

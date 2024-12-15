@@ -153,7 +153,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onPetDelete }) => {
           <Button onClick={handleCloseDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete}>
+          <Button onClick={handleConfirmDelete} color='error'>
             Delete
           </Button>
         </DialogActions>
