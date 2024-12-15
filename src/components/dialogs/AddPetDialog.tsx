@@ -65,6 +65,8 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
     }
 
     const parsedWeight = parseInt(weight, 10);
+    const imageType = image ? image.split(";")[0].split(":")[1] : null;
+
     addPet({
       name,
       isMale: isMale,
@@ -72,6 +74,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
       breed,
       weight: parsedWeight,
       image,
+      imageType,
       type,
     })
       .then((response) => {

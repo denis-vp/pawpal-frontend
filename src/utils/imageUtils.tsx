@@ -6,7 +6,7 @@
  */
 export function addDataUrlPrefix(
   base64String: string,
-  imageType: "png" | "jpeg" | "jpg"
+  imageType: string,
 ): string {
   return `data:image/${imageType};base64,${base64String}`;
 }
