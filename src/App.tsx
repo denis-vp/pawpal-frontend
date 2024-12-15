@@ -9,6 +9,7 @@ import { useSnackBarStore } from "./state/snackBarStore";
 import Layout from "./components/Layout";
 import PetsPage from "./pages/PetsPage";
 import PetProfile from "./components/pet-profile/PetProfile";
+import AppointmentsPage from "./pages/AppointmentsPage";
 import ProfilePage from "./pages/ProfilePage";
 
 const router = createBrowserRouter([
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/appointments",
-    element: <Layout children={<></>} />,
+    element: <Layout children={<AppointmentsPage/>} />,
   },
   {
     path: "/profile",

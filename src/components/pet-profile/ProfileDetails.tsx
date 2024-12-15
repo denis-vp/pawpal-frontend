@@ -5,13 +5,18 @@ import EditPetDialog from "../dialogs/EditPetDialog";
 import PetsIcon from '@mui/icons-material/Pets';
 import { addDataUrlPrefix } from "../../utils/imageUtils";
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { useApiStore } from "../../state/apiStore";
+import { useSnackBarStore } from "../../state/snackBarStore";
 
 interface ProfileDetailsProps {
   petDetails: Pet;
 }
 
-const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
+const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails: initialPetDetails }) => {
+  const [petDetails, setPetDetails] = useState<Pet>(initialPetDetails);
   const [editPetDialogOpen, setEditPetDialogOpen] = useState(false);
+  const { getPetById } = useApiStore();
+  const { openAlert } = useSnackBarStore();
 
   const handleEditClick = () => {
     setEditPetDialogOpen(true);
@@ -21,14 +26,26 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
     setEditPetDialogOpen(false);
   };
 
-  const handleUpdatePet = (updatedPet: Pet) => {
-    console.log("Updated pet details:", updatedPet);
+  const handleUpdatePet = async (updatedPetId: number) => {
+    try {
+      const response = await getPetById(updatedPetId);
+
+      if (response.status === 200) {
+        setPetDetails(response.data);
+        openAlert("Pet details updated successfully!", "success");
+      } else {
+        openAlert("Unexpected response status. Please try again.", "error");
+      }
+    } catch (error) {
+      openAlert("Network error or server is unreachable.", "error");
+    }
+
     setEditPetDialogOpen(false);
   };
 
   const petImage = petDetails.image ? addDataUrlPrefix(petDetails.image, petDetails.imageType) : null;
 
-  function calculateAge(dateOfBirth: Date) {
+  const calculateAge = (dateOfBirth: Date) => {
     const birthDate = new Date(dateOfBirth);
     const today = new Date();
 
@@ -49,7 +66,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
     }
 
     return `${ageYears} years and ${monthDiff} months`;
-  }
+  };
 
   const getOrdinalSuffix = (day: number) => {
     if (day >= 11 && day <= 13) {
@@ -70,7 +87,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
     const year = d.getFullYear();
     return `${day}${getOrdinalSuffix(day)} of ${month}, ${year}`;
   };
-
 
   return (
     <Grid container spacing={4} alignItems="center">
@@ -93,7 +109,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
             },
           }}
         >
-
           {petImage ? (
             <CardMedia
               component="img"
@@ -121,128 +136,45 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails }) => {
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                 }}
                 onClick={handleEditClick}
-              /></IconButton></Tooltip>
+              />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         {/* Grid for details */}
         <Grid container spacing={2}>
-          {/* Type and Breed */}
-          <Grid item xs={6} display="flex" alignItems="left">
-            <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary", mr: 2 }}>
-              Type:
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                fontWeight: "bold",
-                bgcolor: "primary.light",
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 20,
-              }}
-            >
-              {petDetails.type}
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Type:</strong> {petDetails.type}
             </Typography>
           </Grid>
-          <Grid item xs={6} display="flex" alignItems="left">
-            <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary", mr: 2 }}>
-              Breed:
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                fontWeight: "bold",
-                bgcolor: "primary.light",
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 20,
-              }}
-            >
-              {petDetails.breed}
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Breed:</strong> {petDetails.breed}
             </Typography>
           </Grid>
-
-          {/* Gender and Weight */}
-          <Grid item xs={6} display="flex" alignItems="left">
-            <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary", mr: 2 }}>
-              Gender:
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                fontWeight: "bold",
-                bgcolor: "primary.light",
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 20,
-              }}
-            >
-              {petDetails.isMale ? "Male" : "Female"}
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Gender:</strong> {petDetails.isMale ? "Male" : "Female"}
             </Typography>
           </Grid>
-          <Grid item xs={6} display="flex" alignItems="left">
-            <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary", mr: 2 }}>
-              Weight:
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                fontWeight: "bold",
-                bgcolor: "primary.light",
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 20,
-              }}
-            >
-              {petDetails.weight} kg
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Weight:</strong> {petDetails.weight} kg
             </Typography>
           </Grid>
-          {/* Date of Birth and Age */}
-          <Grid item xs={6} display="flex" alignItems="left">
-            <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary", mr: 2 }}>
-              Date of Birth:
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                fontWeight: "bold",
-                bgcolor: "primary.light",
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 20,
-              }}
-            >
-              {petDetails.dateOfBirth
-                ? formatDateWithOrdinal(petDetails.dateOfBirth)
-                : "N/A"}
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Date of Birth:</strong>{" "}
+              {petDetails.dateOfBirth ? formatDateWithOrdinal(petDetails.dateOfBirth) : "N/A"}
             </Typography>
           </Grid>
-          <Grid item xs={6} display="flex" alignItems="left">
-            <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary", mr: 2 }}>
-              Age:
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                fontWeight: "bold",
-                bgcolor: "primary.light",
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 20,
-              }}
-            >
-              {calculateAge(petDetails.dateOfBirth)}
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Age:</strong> {calculateAge(petDetails.dateOfBirth)}
             </Typography>
           </Grid>
-
         </Grid>
-
       </Grid>
 
       {/* EditPetDialog Component */}

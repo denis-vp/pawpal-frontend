@@ -28,7 +28,7 @@ interface EditPetDialogProps {
   open: boolean;
   onClose: () => void;
   pet: Pet | null;
-  onUpdatePet: (updatePet: Pet) => void;
+  onUpdatePet: (updatePetId: number) => void;
 }
 
 const EditPetDialog: React.FC<EditPetDialogProps> = ({
@@ -45,7 +45,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
   const [weight, setWeight] = useState("");
   const [image, setImage] = useState("");
   const [imageName, setImageName] = useState<string | null>(null);
-  const [type, setAnimalType] = useState<string>("");
+  const [type, setAnimalType] = useState<AnimalType | "">("");
   const { openAlert } = useSnackBarStore();
 
   useEffect(() => {
@@ -61,11 +61,16 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
   }, [pet]);
 
   const handleUpdateClick = () => {
+    if (!type) {
+      openAlert("Animal type is required.", "error");
+      return;
+    }
+    console.log("Selected Type:", type);
     const parsedWeight = parseInt(weight);
     const date = new Date(dateOfBirth);
     if (pet) {
       const imageType = image.split(";")[0].split(":")[1];
-      updatePet(pet.id, { name, isMale:isMale, dateOfBirth: date, breed, weight: parsedWeight, image, imageType, type })
+      updatePet(pet.id, { name, isMale, dateOfBirth: date, breed, weight: parsedWeight, image, imageType, type })
         .then((response) => {
           if (response.status === 200) {
             onUpdatePet(response.data);
@@ -174,11 +179,7 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
           </Typography>
           <Switch
             checked={!isMale}
-            onChange={(e) => {
-              const newState = !e.target.checked;
-              console.log("isMale updated:", newState); 
-              setIsMale(newState);
-            }}
+            onChange={(e) => { setIsMale(!e.target.checked)}}
             sx={{
               "& .MuiSwitch-thumb": {
                 backgroundColor: isMale ? "#529ff7" : "#fb6f92",
@@ -246,11 +247,11 @@ const EditPetDialog: React.FC<EditPetDialogProps> = ({
             onChange={(e) => setAnimalType(e.target.value as AnimalType)}
             fullWidth
           >
-            {Object.values(AnimalType).map((type) => (
-              <MenuItem key={type} value={type}>
-                {type}
-              </MenuItem>
-            ))}
+            {Object.values(AnimalType).map((animalType) => (
+      <MenuItem key={animalType} value={animalType}>
+        {animalType}
+      </MenuItem>
+    ))}
           </Select>
         </FormControl>
       </DialogContent>

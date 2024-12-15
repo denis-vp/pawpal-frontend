@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Fab, Grid, Tooltip } from "@mui/material";
 import { useApiStore } from "../state/apiStore";
 import { Pet } from "../models/Pet";
-import PetCard from "../components/pets-page/PetCard";
+import PetCard from "../components/cards/PetCard";
 import AddPetDialog from "../components/dialogs/AddPetDialog";
 import { useSnackBarStore } from "../state/snackBarStore";
 import AddIcon from "@mui/icons-material/Add";
@@ -78,6 +78,10 @@ const PetsPage: React.FC = () => {
     setAddPetDialogOpen(false);
   };
 
+  const handlePetDelete = (petId: number) => {
+    setPets((prevPets) => prevPets.filter((pet) => pet.id !== petId));
+  };
+
   return (
     <Box
       sx={{
@@ -114,7 +118,7 @@ const PetsPage: React.FC = () => {
       <Grid container spacing={4} mt={3}>
         {pets.map((pet) => (
           <Grid item xs={12} key={pet.id}>
-            <PetCard pet={pet} />
+            <PetCard pet={pet} onPetDelete={handlePetDelete}/>
           </Grid>
         ))}
       </Grid>

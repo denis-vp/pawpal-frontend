@@ -47,7 +47,6 @@ type ApiStore = {
 
   // Veterinary Appointment related API calls
   addVeterinaryAppointment: (appointment: {
-    id: number;
     userId: number;
     petId: number;
     status: AppointmentStatus;
@@ -55,6 +54,10 @@ type ApiStore = {
     duration: number;
     cost: number;
   }) => Promise<AxiosResponse>;
+  getAllAppointments: () => Promise<AxiosResponse>;
+  getAppointmentById: (appointmentId: number) => Promise<AxiosResponse>;
+  deletePet: (petId: number) => Promise<void>;
+  deleteAppointment: (appointmentId: number) => Promise<void>;
 };
 
 export const useApiStore = create<ApiStore>((set, get) => {
@@ -151,6 +154,13 @@ export const useApiStore = create<ApiStore>((set, get) => {
         return Promise.reject(error);
       }
     },
+    deletePet: async (petId: number) : Promise<void> => {
+      try {
+        await axiosInstance.delete(`/pets/${petId}`);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
 
     // Veterinary Appointment related API calls
     addVeterinaryAppointment: async (appointment) => {
@@ -164,5 +174,29 @@ export const useApiStore = create<ApiStore>((set, get) => {
         return Promise.reject(error);
       }
     },
+    
+      getAllAppointments: async () => {
+        try {
+          const response = await axiosInstance.get(`/api/veterinary-appointments/all`);
+          return response;
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      },
+      getAppointmentById: async (appointmentId: number) => {
+        try {
+          const response = await axiosInstance.get(`/api/veterinary-appointments/${appointmentId}`);
+          return response;
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      },
+      deleteAppointment: async (appointmentId: number) : Promise<void> => {
+        try {
+          await axiosInstance.delete(`/api/veterinary-appointments/${appointmentId}`);
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      },
   };
 });

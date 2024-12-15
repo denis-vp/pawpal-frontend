@@ -5,9 +5,9 @@ import { Pet } from "../../models/Pet";
 import ProfileDetails from "./ProfileDetails";
 import { useApiStore } from "../../state/apiStore";
 import theme from "../../utils/theme";
-import DocumentCard from "./DocumentCard";
-import MedicalLogCard from "./MedicalLogCard";
-import VaccineLogCard from "./VaccineLogCard";
+import DocumentCard from "../cards/DocumentCard";
+import MedicalLogCard from "../cards/MedicalLogCard";
+import VaccineLogCard from "../cards/VaccineLogCard";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSnackBarStore } from "../../state/snackBarStore";
 
