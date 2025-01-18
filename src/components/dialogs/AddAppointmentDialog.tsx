@@ -52,6 +52,9 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
             }
             break;
 
+          case 204:
+            break;
+          
           case 400:
             alert("Invalid user ID provided. Please try again.");
             break;
