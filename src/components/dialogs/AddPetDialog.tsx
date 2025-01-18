@@ -44,7 +44,6 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   const [type, setAnimalType] = React.useState<AnimalType | "">("");
   const { openAlert } = useSnackBarStore();
 
-  // Reset form fields when dialog is closed
   useEffect(() => {
     if (!open) {
       setName("");
@@ -187,7 +186,7 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
             checked={!isMale}
             onChange={(e) => {
               const newState = !e.target.checked;
-              console.log("isMale updated:", newState); 
+              console.log("isMale updated:", newState);
               setIsMale(newState);
             }}
             sx={{

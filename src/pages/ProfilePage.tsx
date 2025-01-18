@@ -119,7 +119,7 @@ const ProfilePage: React.FC = () => {
         const reader = new FileReader();
         reader.onloadend = async () => {
           const base64String = reader.result as string;
-          const imageType = "png"; // Set imageType to just "png"
+          const imageType = "png";
           console.log("Image type:", imageType);
           console.log("Base64 string:", base64String);
           try {
@@ -233,7 +233,6 @@ const ProfilePage: React.FC = () => {
               >
                 Change Password
               </Button>
-              {/* Change Password Dialog */}
               <Dialog
                 open={openPasswordDialog}
                 onClose={() => setOpenPasswordDialog(false)}

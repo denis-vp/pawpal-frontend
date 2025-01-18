@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Grid, Typography, Box, CardMedia, Tooltip, IconButton } from "@mui/material";
-import { Pet } from "../../models/Pet";
-import EditPetDialog from "../dialogs/EditPetDialog";
+import { Pet } from ".././models/Pet";
+import EditPetDialog from "./dialogs/EditPetDialog";
 import PetsIcon from '@mui/icons-material/Pets';
-import { addDataUrlPrefix } from "../../utils/imageUtils";
+import { addDataUrlPrefix } from ".././utils/imageUtils";
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import { useApiStore } from "../../state/apiStore";
-import { useSnackBarStore } from "../../state/snackBarStore";
+import { useApiStore } from ".././state/apiStore";
+import { useSnackBarStore } from ".././state/snackBarStore";
 
 interface ProfileDetailsProps {
   petDetails: Pet;
@@ -90,7 +90,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails: initialPetD
 
   return (
     <Grid container spacing={4} alignItems="center">
-      {/* Image Section */}
       <Grid item xs={12} md={4} display="flex" justifyContent="center">
         <Box
           sx={{
@@ -141,7 +140,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails: initialPetD
           </Tooltip>
         </Box>
 
-        {/* Grid for details */}
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Typography variant="body1">
@@ -177,7 +175,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ petDetails: initialPetD
         </Grid>
       </Grid>
 
-      {/* EditPetDialog Component */}
       <EditPetDialog
         open={editPetDialogOpen}
         onClose={handleDialogClose}

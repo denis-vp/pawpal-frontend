@@ -44,7 +44,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onPetDelete }) => {
   const handleConfirmDelete = async () => {
     try {
       await deletePet(pet.id);
-      onPetDelete(pet.id); 
+      onPetDelete(pet.id);
     } catch (error) {
       console.error("Error deleting pet:", error);
     }
@@ -93,7 +93,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onPetDelete }) => {
           },
         }}
       >
-        {/* Image and Details Section */}
+
         <Box sx={{ display: "flex", alignItems: "center", gap: "1em" }}>
           {petImage ? (
             <CardMedia
@@ -121,7 +121,6 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onPetDelete }) => {
           </CardContent>
         </Box>
 
-        {/* Action Section */}
         <Box display="flex" alignItems="center">
           <Typography variant="body2" fontWeight="bold" mr={1}>
             View Profile
@@ -130,7 +129,6 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onPetDelete }) => {
             <ArrowForwardIcon fontSize="inherit" />
           </IconButton>
 
-          {/* Delete Button */}
           <IconButton
             size="large"
             onClick={handleDeleteClick}
@@ -141,7 +139,6 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onPetDelete }) => {
         </Box>
       </Card>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>

@@ -35,7 +35,6 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
     renewDate: string
   ) => {
     console.log("Adding log:", { id, type, date, renewDate });
-    // Implement logic to add the log
   };
 
   const handleDeleteClick = (log: VaccineLog) => {
@@ -46,7 +45,6 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
   const confirmDelete = () => {
     if (selectedLog) {
       console.log("Deleting log:", selectedLog.id);
-      // Implement logic to delete the log
     }
     setDeleteDialogOpen(false);
   };
@@ -64,9 +62,9 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
           {title}
         </Typography>
         <Tooltip title="Add Vaccine Log" arrow>
-        <IconButton onClick={handleAddClick}>
-          <AddIcon fontSize="large" />
-        </IconButton>
+          <IconButton onClick={handleAddClick}>
+            <AddIcon fontSize="large" />
+          </IconButton>
         </Tooltip>
       </Box>
 
@@ -101,24 +99,22 @@ const VaccineLogCard: React.FC<VaccineLogProps> = ({ title, logs }) => {
             </Box>
           </Box>
           <Tooltip title="Delete Vaccine Log" arrow>
-          <IconButton onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteClick(log);
-          }}>
-            <DeleteIcon fontSize="large" />
-          </IconButton>
+            <IconButton onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteClick(log);
+            }}>
+              <DeleteIcon fontSize="large" />
+            </IconButton>
           </Tooltip>
         </Box>
       ))}
 
-      {/* Dialog for Adding Vaccine Log */}
       <AddVaccineLogDialog
         open={addDialogOpen}
         onClose={() => setAddDialogOpen(false)}
         onAddLog={handleAddLog}
       />
 
-      {/* Dialog for Viewing Vaccine Log */}
       <EditVaccineLogDialog
         open={viewDialogOpen}
         onClose={() => setViewDialogOpen(false)}

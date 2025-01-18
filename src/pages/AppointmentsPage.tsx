@@ -11,7 +11,7 @@ const AppointmentsPage: React.FC = () => {
   const [appointments, setAppointments] = useState<VeterinaryAppointment[]>([]);
   const [addAppointmentDialogOpen, setAddAppointmentDialogOpen] = useState(false);
 
-  const { getAllAppointments, getAppointmentById } = useApiStore();
+  const { getAllAppointments } = useApiStore();
   const { openAlert } = useSnackBarStore();
 
   useEffect(() => {
@@ -59,8 +59,8 @@ const AppointmentsPage: React.FC = () => {
   const handleCloseDialog = () => setAddAppointmentDialogOpen(false);
 
   const handleAddAppointment = (appointment: VeterinaryAppointment) => {
-      setAppointments((prevAppointments) => [...prevAppointments, appointment]);
-      setAddAppointmentDialogOpen(false);
+    setAppointments((prevAppointments) => [...prevAppointments, appointment]);
+    setAddAppointmentDialogOpen(false);
   };
 
   const handleDeleteAppointment = (appointmentId: number) => {
@@ -105,14 +105,14 @@ const AppointmentsPage: React.FC = () => {
       <Grid container spacing={4} mt={3}>
         {appointments.map((appointment) => (
           <Grid item xs={12} key={appointment.id}>
-            <AppointmentCard appointment={appointment} onDelete={handleDeleteAppointment}  />
+            <AppointmentCard appointment={appointment} onDelete={handleDeleteAppointment} />
           </Grid>
         ))}
       </Grid>
 
       <AddAppointmentDialog
-              open={addAppointmentDialogOpen}
-              onClose={handleCloseDialog} onSubmit={ handleAddAppointment }/>
+        open={addAppointmentDialogOpen}
+        onClose={handleCloseDialog} onSubmit={handleAddAppointment} />
     </Box>
   );
 };

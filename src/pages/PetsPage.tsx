@@ -118,7 +118,7 @@ const PetsPage: React.FC = () => {
       <Grid container spacing={4} mt={3}>
         {pets.map((pet) => (
           <Grid item xs={12} key={pet.id}>
-            <PetCard pet={pet} onPetDelete={handlePetDelete}/>
+            <PetCard pet={pet} onPetDelete={handlePetDelete} />
           </Grid>
         ))}
       </Grid>

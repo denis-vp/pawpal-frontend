@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, CircularProgress, styled, Button, CssBaseline, Grid, ThemeProvider } from "@mui/material";
-import { Pet } from "../../models/Pet";
-import ProfileDetails from "./ProfileDetails";
-import { useApiStore } from "../../state/apiStore";
-import theme from "../../utils/theme";
-import DocumentCard from "../cards/DocumentCard";
-import MedicalLogCard from "../cards/MedicalLogCard";
-import VaccineLogCard from "../cards/VaccineLogCard";
+import { Pet } from "../models/Pet";
+import ProfileDetails from "../components/ProfileDetails";
+import { useApiStore } from "../state/apiStore";
+import theme from "../utils/theme";
+import DocumentCard from "../components/cards/DocumentCard";
+import MedicalLogCard from "../components/cards/MedicalLogCard";
+import VaccineLogCard from "../components/cards/VaccineLogCard";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useSnackBarStore } from "../../state/snackBarStore";
+import { useSnackBarStore } from "../state/snackBarStore";
 
 const PetProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
