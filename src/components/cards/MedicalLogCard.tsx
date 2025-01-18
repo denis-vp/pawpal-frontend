@@ -45,7 +45,6 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
       description,
       date,
     });
-    // Implement logic to add the log
   };
 
   const handleDeleteClick = (log: MedicalLog) => {
@@ -56,7 +55,6 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
   const confirmDelete = () => {
     if (selectedLog) {
       console.log("Deleting log:", selectedLog.id);
-      // Implement logic to delete the log
     }
     setDeleteDialogOpen(false);
   };
@@ -74,9 +72,9 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
           {title}
         </Typography>
         <Tooltip title="Add Medical Log" arrow>
-        <IconButton onClick={handleAddClick}>
-          <AddIcon fontSize="large" />
-        </IconButton>
+          <IconButton onClick={handleAddClick}>
+            <AddIcon fontSize="large" />
+          </IconButton>
         </Tooltip>
       </Box>
 
@@ -93,15 +91,15 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
             borderRadius: 1,
             transition: "border-color 0.3s, box-shadow 0.3s",
             "&:hover": {
-              borderColor: "primary.dark", 
-              boxShadow: "0 4px 8px ", 
+              borderColor: "primary.dark",
+              boxShadow: "0 4px 8px ",
             },
           }}
           onClick={() => handleArrowClick(log)}
         >
           <Box display="flex" alignItems="center" gap={2}>
             <MedicalInformationIcon
-              sx={{fontSize: 40 }}
+              sx={{ fontSize: 40 }}
             />
             <Box>
               <Typography variant="body2" fontWeight="medium">
@@ -113,12 +111,12 @@ const MedicalLogCard: React.FC<MedicalLogProps> = ({ title, logs }) => {
             </Box>
           </Box>
           <Tooltip title="Delete Medical Log" arrow>
-          <IconButton onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteClick(log);
-          }}>
-            <DeleteIcon fontSize="large" />
-          </IconButton>
+            <IconButton onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteClick(log);
+            }}>
+              <DeleteIcon fontSize="large" />
+            </IconButton>
           </Tooltip>
         </Box>
       ))}

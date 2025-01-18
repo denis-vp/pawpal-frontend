@@ -18,13 +18,13 @@ import { Pet } from "../../models/Pet";
 import { useSnackBarStore } from "../../state/snackBarStore";
 import { VeterinaryAppointment } from "../../models/VeterinaryAppointment";
 
-// Constants
+
 const APPOINTMENT_DURATION = 30;
 const APPOINTMENT_BASE_COST = 25.0;
 
 interface AddAppointmentDialogProps {
-  open: boolean; 
-  onClose: () => void; 
+  open: boolean;
+  onClose: () => void;
   onSubmit: (appointment: VeterinaryAppointment) => void;
 }
 
@@ -33,16 +33,14 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
   const [selectedPet, setSelectedPet] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string>("");
-   const { openAlert } = useSnackBarStore();
-
+  const { openAlert } = useSnackBarStore();
   const { addVeterinaryAppointment, getAllPetsByUserId } = useApiStore();
 
-  // Fetch pets when the component mounts
   useEffect(() => {
     const fetchPets = async () => {
       try {
         const response = await getAllPetsByUserId();
-        
+
         switch (response.status) {
           case 200:
             if (Array.isArray(response.data)) {
@@ -89,7 +87,6 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
     setSelectedTime(time);
   };
 
-  // HARDCODED TIMES
   const availableTimes = ["13:30", "14:00", "14:30", "15:00", "15:30"];
 
   const handleSubmit = () => {
@@ -97,7 +94,7 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
       alert("Please fill out all required fields.");
       return;
     }
-  
+
     const selectedDateTime = new Date(selectedDate);
     const [hours, minutes] = selectedTime.split(":").map(Number);
     selectedDateTime.setHours(hours + 2, minutes, 0, 0);
@@ -109,7 +106,7 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
       return;
     }
     const appointmentData = {
-      userId: 1, // Assuming userId is hardcoded
+      userId: 1,
       petId: pet.id,
       status: AppointmentStatus.SCHEDULED,
       localDateTime: dateTimeString,
@@ -153,7 +150,6 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
       <DialogTitle>Make a Veterinary Appointment</DialogTitle>
       <DialogContent>
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Pet Dropdown */}
           <div>
             <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
               Pet *
@@ -176,7 +172,6 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
             </Select>
           </div>
 
-          {/* Date Picker */}
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div>
               <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
@@ -195,7 +190,6 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
             </div>
           </LocalizationProvider>
 
-          {/* Time Dropdown */}
           <div>
             <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
               Time *
@@ -218,7 +212,6 @@ const AddAppointmentDialog: React.FC<AddAppointmentDialogProps> = ({ open, onClo
             </Select>
           </div>
 
-          {/* Important Information */}
           <div
             style={{
               backgroundColor: "white",

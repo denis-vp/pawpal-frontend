@@ -8,7 +8,7 @@ import AlertSnackBar from "./components/AlertSnackBar";
 import { useSnackBarStore } from "./state/snackBarStore";
 import Layout from "./components/Layout";
 import PetsPage from "./pages/PetsPage";
-import PetProfile from "./components/pet-profile/PetProfile";
+import PetProfile from "./pages/PetProfilePage";
 import AppointmentsPage from "./pages/AppointmentsPage";
 import ProfilePage from "./pages/ProfilePage";
 

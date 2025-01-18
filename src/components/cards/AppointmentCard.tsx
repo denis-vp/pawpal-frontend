@@ -38,7 +38,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onDelete
 
   useEffect(() => {
     const fetchPetName = async () => {
-      setLoading(true);  
+      setLoading(true);
       try {
         const response = await getPetById(appointment.petId);
         setPetName(response.data.name);
@@ -109,7 +109,6 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onDelete
         }}
       >
         <Grid container justifyContent="space-between" alignItems="center">
-          {/* Appointment Details */}
           <Grid item xs={9}>
             <Typography variant="h6" fontWeight="bold">
               Appointment for{" "}
@@ -130,7 +129,6 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onDelete
             </Typography>
           </Grid>
 
-          {/* Status and Delete Button */}
           <Grid item xs={3} container alignItems="center" justifyContent="flex-end">
             <Chip
               label={getStatusLabel(appointment.status)}
@@ -144,7 +142,6 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onDelete
         </Grid>
       </Card>
 
-      {/* Deletion Confirmation Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>

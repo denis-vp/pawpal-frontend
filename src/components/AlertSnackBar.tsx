@@ -15,7 +15,7 @@ function AlertSnackBar({
   open,
   text,
   severity = "info",
-  onClose = () => {},
+  onClose = () => { },
   setIsOpenAlert,
 }: AlertSnackBarProps) {
   const handleClose = (
