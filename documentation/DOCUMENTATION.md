@@ -1,5 +1,7 @@
 # PawPal Documentation
 
+![Diagram](./diagram.png)
+
 ## Libraries and Frameworks
 PawPal utilizes a variety of modern libraries and frameworks to ensure a robust, responsive, and maintainable application. The core dependencies are as follows:
 
@@ -61,6 +63,7 @@ PawPal utilizes a variety of modern libraries and frameworks to ensure a robust,
 
 ## Project Structure
 The directory structure of the application is as follows:
+```md
 └── src/
     ├── assets/
     ├── components/
@@ -108,6 +111,7 @@ The directory structure of the application is as follows:
     ├── App.tsx
     ├── index.css
     └── main.tsx
+```
 
 ### Root Level
 - **App.tsx:** The main entry point for the application, initializing routing and theming.
